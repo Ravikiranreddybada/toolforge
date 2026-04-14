@@ -27,7 +27,7 @@ export default function Login() {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = 'https://toolforge.onrender.com/auth/google';
+    window.location.href = `${import.meta.env.VITE_API_URL || 'https://toolforge-df1j.onrender.com'}/auth/google`;
   };
 
   return (
