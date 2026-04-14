@@ -1,79 +1,78 @@
-# 🤖 ToolForge — Production-Grade AI Agentic Platform
+# 🤖 ToolForge — Agentic AI Workflow Platform
 
 <div align="center">
-  <p align="center">
-    <b>A high-performance LLM-powered platform for autonomous reasoning and task execution.</b>
-  </p>
-  <p align="center">
-    <img src="https://img.shields.io/badge/Agentic%20AI-Llama%203.3-7b2ff7?style=for-the-badge&logo=ai" alt="AI Agentic" />
-    <img src="https://img.shields.io/badge/Frontend-React%2019-00d4ff?style=for-the-badge&logo=react" alt="React" />
-    <img src="https://img.shields.io/badge/Backend-Node.js-34d399?style=for-the-badge&logo=node.js" alt="Node.js" />
-    <img src="https://img.shields.io/badge/Infrastructure-Docker-2496ED?style=for-the-badge&logo=docker" alt="Docker" />
-  </p>
-  <p align="center">
-    <a href="https://toolforge-liard.vercel.app/"><strong>Live Demo</strong></a> ·
-    <a href="https://toolforge.onrender.com/health"><strong>API Health</strong></a> ·
-    <a href="https://github.com/Ravikiranreddybada/toolforge/issues"><strong>Report Bug</strong></a>
-  </p>
+
+[![Vercel](https://img.shields.io/badge/Frontend-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://toolforge-lyart.vercel.app/)
+[![Render](https://img.shields.io/badge/Backend-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://toolforge-df1j.onrender.com/health)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![React](https://img.shields.io/badge/React-19-00d4ff?style=for-the-badge&logo=react)](https://react.dev/)
+[![Llama3.3](https://img.shields.io/badge/AI-Llama_3.3-7b2ff7?style=for-the-badge&logo=meta)](https://groq.com/)
+
+**Next-generation MERN platform for autonomous AI agents using Chain-of-Thought (CoT) reasoning.**
+
+[Explore Live Demo](https://toolforge-lyart.vercel.app/) · [Report Bug](https://github.com/Ravikiranreddybada/toolforge/issues) · [Request Feature](https://github.com/Ravikiranreddybada/toolforge/issues)
 </div>
 
 ---
 
 ## 📖 Overview
-**ToolForge** is a production-ready MERN platform that leverages **Llama 3.3 (via Groq)** to provide four autonomous AI agents designed for enterprise workflows. Unlike standard chatbots, ToolForge agents use **Chain-of-Thought (CoT)** reasoning to plan, parse, and execute complex technical tasks.
+
+**ToolForge** is a production-grade orchestration platform that transforms complex enterprise workflows into autonomous AI tasks. Leveraging **Llama 3.3 (via Groq)**, the platform provides specialized agents that don't just "chat"—they **plan, reason, and execute**.
 
 ### 🧩 The Problem
-Modern workflows are fragmented. Developers and researchers spend hours switching between tools for code review, SQL generation, and market research, often losing context and precision.
+Enterprise technical tasks (Code reviews, SQL generation, Workflow planning) are often fragmented across multiple siloed tools, leading to context loss and inefficiency.
 
 ### 💡 The Solution
-A unified command center where specialized AI agents handle technical heavy lifting. Built with security-first architecture (JWT + OAuth 2.0) and a high-performance React frontend.
+A unified, secure command center featuring six specialized agents with built-in **Chain-of-Thought (CoT)** reasoning, integrated directly into a high-performance MERN architecture with enterprise-grade authentication.
 
 ---
 
 ## 🚀 Live Demo
-- **Frontend Explorer**: [ToolForge Vercel](https://toolforge-liard.vercel.app/)
-- **Backend API**: [ToolForge Render](https://toolforge.onrender.com/health)
-- **Demo Video**: [Loom Walkthrough (Coming Soon)](#)
+
+| Component | Status | URL |
+|---|---|---|
+| **Frontend UI** | ✅ Live | [toolforge-lyart.vercel.app](https://toolforge-lyart.vercel.app/) |
+| **API Backend** | ✅ Live | [toolforge-df1j.onrender.com](https://toolforge-df1j.onrender.com/health) |
+| **Demo Video** | 🎬 Watch | [Loom Walkthrough (Coming Soon)](#) |
 
 ---
 
 ## 🛠 Tech Stack
 
-| Category | Technology |
-|---|---|
-| **Frontend** | React 19, Vite, React Router 7, Tailwind/Custom CSS |
-| **Backend** | Node.js, Express 5, Passport.js (Google OAuth 2.0) |
-| **Database** | MongoDB Atlas, Mongoose, Connect-Mongo |
-| **AI Intelligence** | Groq API (Llama 3.3 70B), Chain-of-Thought Prompting |
-| **DevOps** | Docker, Docker Compose, Jenkins, Vercel, Render |
+### 💻 Frontend
+- **React 19 & Vite**: High-performance rendering and lightning-fast development.
+- **Tailwind & Custom CSS**: Modern, premium UI with "Glassmorphism" aesthetics.
+- **React Router 7**: Optimized client-side routing.
+- **Context API**: Centralized state management for authentication and global settings.
+
+### ⚙️ Backend
+- **Node.js & Express**: Scalable RESTful API architecture.
+- **Passport.js**: Multi-strategy authentication (Local + Google OAuth 2.0).
+- **JWT (JSON Web Tokens)**: Secure, stateless session management.
+- **CORS & Helm**: Production-hardened security headers.
+
+### 🧠 AI Intelligence
+- **Groq Llama 3.3 (70B)**: Ultra-fast LLM inference for real-time reasoning.
+- **Chain-of-Thought (CoT)**: Advanced prompting techniques to ensure logical task execution.
+- **AI Proxy Engine**: Secure backend-mediated communication with AI APIs.
+
+### 🗄️ Database & DevOps
+- **MongoDB Atlas**: Fully managed cloud NoSQL database.
+- **Docker & Compose**: Containerized environment for consistent scaling.
+- **Jenkins**: CI/CD pipeline automation.
 
 ---
 
 ## 🔥 Core AI Agents
 
-### 1. 🔍 Web Research Agent
-Autonomously researches complex topics using iterative planning.
-- **Input:** Natural language query.
-- **Reasoning:** Strategy Planning → Source Querying → Synthesis.
-- **Output:** Structured markdown reports with key takeaways.
+ToolForge features six intelligent agents designed for specific enterprise pillars:
 
-### 2. 🗄️ SQL Architect
-Context-aware SQL generator that understands your database schema.
-- **Input:** Database schema + Natural language request.
-- **Reasoning:** Schema Analysis → Join Identification → Query Optimization.
-- **Output:** Performance-optimized SQL query + Execution explanation.
-
-### 3. 🔬 Code Auditor
-A deep-scanning agent that reviews code for more than just syntax.
-- **Input:** Code snippet (JS, Python, Go, etc.).
-- **Reasoning:** Structural Parsing → Bug Scanning → Security Analysis.
-- **Output:** Bug reports, security vulnerabilities, and a **Refactored Version**.
-
-### 4. ⚙️ Workflow Automation Planner
-Plans multi-tool automation pipelines for enterprise scaling.
-- **Input:** Automation goal + Available tools (Slack, Gmail, etc.).
-- **Reasoning:** Goal Decomposition → Tool Mapping → Skeleton Generation.
-- **Output:** Step-by-step plan + **LangChain/Python boilerplate**.
+1.  **🔍 Web Research Agent**: Autonomously breaks down research queries and synthesizes findings into actionable reports.
+2.  **🗄️ SQL Query Generator**: Generates optimized SQL queries based on natural language and provided database schemas.
+3.  **🔬 Code Review Agent**: Scans snippets for bugs, security vulnerabilities, and provides a refactored version with a quality score.
+4.  **⚙️ Workflow Planner**: Generates multi-tool automation skeletons (Python/LangChain) for complex business logic.
+5.  **✍️ Prompt Engineering Agent**: Optimizes raw prompts using industry-standard engineering patterns for maximum LLM performance.
+6.  **📡 API Integration Agent**: Generates production-ready integration code with error handling and authentication for any REST API.
 
 ---
 
@@ -81,58 +80,21 @@ Plans multi-tool automation pipelines for enterprise scaling.
 
 ```mermaid
 graph TD
-  User((User)) -->|HTTPS/JWT| FE[React 19 Frontend]
-  FE -->|API Requests| BE[Express 5 Backend]
+  User((User)) -->|HTTPS/JWT| FE[React 19 Frontend - Vercel]
+  FE -->|API Requests| BE[Express Backend - Render]
   
   subgraph Security Layer
-    BE -->|Auth| Passport[Passport.js / Google OAuth]
-    BE -->|Session| MongoStore[MongoDB Session Store]
+    BE -->|OAuth| Passport[Google OAuth 2.0]
+    BE -->|Token| JWT[JWT Generator]
   end
 
   BE -->|Proxy| Groq[Groq Llama 3.3 AI]
-  BE -->|Persistence| Atlas[MongoDB Atlas]
+  BE -->|Storage| Atlas[MongoDB Atlas Cloud]
   
-  subgraph Deployment
-    Vercel[Vercel Frontend]
-    Render[Render Backend]
-    Docker[Docker Containerization]
+  subgraph DevOps
+    Docker[Docker Containers]
+    Jenkins[Jenkins CI/CD]
   end
-```
-
----
-
-## ⚙️ Installation & Setup
-
-### Prerequisites
-- Node.js v18+
-- MongoDB Atlas Account
-- Groq/Anthropic API Key
-
-### 1. Clone the repository
-```bash
-git clone https://github.com/Ravikiranreddybada/toolforge.git
-cd toolforge
-```
-
-### 2. Backend Setup
-```bash
-cd backend
-cp .env.example .env
-npm install
-npm start # Runs on http://localhost:3000
-```
-
-### 3. Frontend Setup
-```bash
-cd ../frontend
-cp .env.example .env
-npm install
-npm run dev # Runs on http://localhost:5173
-```
-
-### 4. Docker (One-Click Setup)
-```bash
-docker-compose up -d --build
 ```
 
 ---
@@ -141,53 +103,78 @@ docker-compose up -d --build
 
 ```text
 toolforge/
-├── backend/                # Express API
-│   ├── models/             # Mongoose Schemas
-│   ├── routes/             # API Endpoints (Auth, AI Proxy)
-│   ├── public/             # Static Assets
-│   └── app.js              # Server Entry Point
-├── frontend/               # React Application
+├── backend/                # Node.js Express API
+│   ├── config/             # Passport & DB configurations
+│   ├── models/             # Mongoose schemas (User, etc.)
+│   ├── routes/             # API Endpoints & AI Proxy logic
+│   └── app.js              # Server entry point
+├── frontend/               # React Application (Vite)
 │   ├── src/
-│   │   ├── components/     # UI Components
-│   │   ├── pages/          # Dashboard & Auth Pages
-│   │   └── context/        # Auth State Management
-│   └── vite.config.js      # Vite Configuration
-├── docker-compose.yml      # Multi-container Orchestration
-├── Dockerfile              # Container Manifest
-└── README.md               # Main Documentation
+│   │   ├── pages/          # Dashboard, Login, Signup
+│   │   ├── components/     # High-reusability UI components
+│   │   └── context/        # AuthContext for state
+│   └── public/             # Static assets
+├── .env.example            # Template for environment variables
+├── docker-compose.yml      # Multi-container orchestration
+└── DEPLOY.md               # Detailed deployment guide
 ```
 
 ---
 
-## 🔮 Future Roadmap
-- [ ] **Multi-Agent Collaboration**: Allow agents to talk to each other to solve larger tasks.
-- [ ] **Custom Training**: Support for fine-tuned RAG (Retrieval Augmented Generation).
-- [ ] **Mobile App**: Native iOS/Android experience using React Native.
-- [ ] **Real-time Logs**: Streaming agent outputs via WebSockets.
+## ⚙️ Installation & Setup
+
+### Prerequisites
+- Node.js v18.x or higher
+- MongoDB Atlas Cloud Database
+- Groq / Anthropic API Keys
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/Ravikiranreddybada/toolforge.git
+cd toolforge
+```
+
+### 2. Environment Configuration
+Create a `.env` file in the root:
+```env
+PORT=3000
+MONGODB_URI=your_mongodb_atlas_uri
+SESSION_SECRET=your_random_secret
+GOOGLE_CLIENT_ID=your_google_id
+GOOGLE_CLIENT_SECRET=your_google_secret
+GROQ_API_KEY=your_groq_key
+```
+
+### 3. Local Installation
+```bash
+# Install and start Backend
+cd backend
+npm install
+npm start
+
+# Install and start Frontend (New Terminal)
+cd ../frontend
+npm install
+npm run dev
+```
 
 ---
 
-## 🤝 Contributing
-Contributions are what make the open source community such an amazing place to learn, inspire, and create.
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+## 🤝 The Team
+
+| Leader | Frontend & UI/UX | Backend & Database |
+| :---: | :---: | :---: |
+| **Bada Ravi Kiran Reddy** | **V.Tanish** | **Kandunuri Eekshith Sai** |
+| [GitHub](https://github.com/Ravikiranreddybada) | Optimization & Agents | API Orchestration |
 
 ---
 
 ## 📄 License
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the **MIT License**. See `LICENSE` for more information.
 
 ---
 
-## 👨‍💻 Author
-**Bada Ravi Kiran Reddy**  
-- GitHub: [@Ravikiranreddybada](https://github.com/Ravikiranreddybada)
-- Project: [ToolForge](https://toolforge-liard.vercel.app/)
-
----
 <div align="center">
-  Built with ❤️ for the AI community.
+  <b>Built with ❤️ for the Future of Agentic AI.</b><br/>
+  © 2026 ToolForge Platform
 </div>
