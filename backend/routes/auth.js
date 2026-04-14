@@ -64,7 +64,6 @@ passport.use(new LocalStrategy(
       return done(null, user);
     } catch (err) { return done(err); }
   }));
-}
 
 passport.serializeUser((user, done) => done(null, user.id));
 passport.deserializeUser(async (id, done) => {
