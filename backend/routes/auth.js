@@ -25,11 +25,15 @@ passport.use(new LocalStrategy(
   }
 ));
 
-if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  console.log('🛡️ Google Strategy Initiative:', { 
+    clientID: process.env.GOOGLE_CLIENT_ID?.substring(0, 15) + '...',
+    callbackURL: process.env.GOOGLE_CALLBACK_URL 
+  });
+
   passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: process.env.GOOGLE_CALLBACK_URL || 'https://toolforge.onrender.com/auth/google/callback'
+    callbackURL: process.env.GOOGLE_CALLBACK_URL || 'https://toolforge-df1j.onrender.com/auth/google/callback'
   }, async (accessToken, refreshToken, profile, done) => {
     try {
       let user = await User.findOne({ googleId: profile.id });
@@ -140,9 +144,10 @@ router.post('/api/logout', (req, res) => {
 });
 
 // ──── Google OAuth ────
-router.get('/auth/google',
-  passport.authenticate('google', { scope: ['profile', 'email'], session: false })
-);
+router.get('/auth/google', (req, res, next) => {
+  console.log('🚀 Redirecting to Google with Client ID:', process.env.GOOGLE_CLIENT_ID?.substring(0, 15) + '...');
+  passport.authenticate('google', { scope: ['profile', 'email'], session: false })(req, res, next);
+});
 
 router.get('/auth/google/callback',
   passport.authenticate('google', { session: false, failureRedirect: `${FRONTEND_URL}/login?error=google_auth_failed` }),
