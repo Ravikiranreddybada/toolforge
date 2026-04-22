@@ -21,8 +21,8 @@ pipeline {
         stage('Health Check') {
             steps {
                 sh 'sleep 20'
-                // Check if the app is responding correctly
-                sh 'curl -f http://localhost:3000/health || exit 1'
+                // We run the curl INSIDE the container to bypass networking issues
+                sh 'docker exec agenticai-app curl -f http://localhost:3000/health || exit 1'
             }
         }
     }
