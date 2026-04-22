@@ -51,15 +51,16 @@ A unified, secure command center featuring six specialized agents with built-in 
 - **JWT (JSON Web Tokens)**: Secure, stateless session management.
 - **CORS & Helm**: Production-hardened security headers.
 
-### 🧠 AI Intelligence
-- **LangGraph & LangChain**: Professional orchestration for stateful, multi-turn AI agents.
-- **Language**: JavaScript (ES Modules)
-- **Framework**: Express.js
-- **Frontend**: React (Vite)
-- **Styling**: Vanilla CSS (Modern Aesthetics)
-- **AI Orchestration**: LangGraph.js / LangChain.js
-- **LLM**: Groq (Llama 3.3 70B)
-- **Database**: MongoDB Atlas (with Agentic Persistence)
+### 🔥 Agentic Pillars
+
+ToolForge features **six** specialized agents powered by autonomous execution loops:
+
+1.  **🔍 Web Research Agent**: Actually calls Tavily to synthesize real-time findings.
+2.  **🗄️ MongoDB Query Generator**: Generates and **executes** MQL queries on live collections.
+3.  **🔬 Code Review Agent**: Analyzes snippets for bugs and security vulnerabilities.
+4.  **⚙️ Workflow Planner**: Generates multi-tool automation skeletons.
+5.  **✍️ Prompt Engineering Agent**: Optimizes prompts and tests them via live inference.
+6.  **📡 API Integration Agent**: Generates production-ready integration code.
 
 ---
 
@@ -69,34 +70,20 @@ ToolForge uses a **Pure MERN** architecture where the agentic reasoning loop is 
 
 ```mermaid
 graph TD
-  User((User)) -->|HTTPS/JWT| FE[React 19 Frontend - Vercel]
-  FE -->|API Requests| BE[Express Backend - Render]
-  
-  subgraph AI Orchestration Layer
-    BE -->|Automate| AgentSvc[Python Agent Service]
-    AgentSvc -->|LangGraph| ReAct[ReAct Loop]
-    ReAct -->|Tools| MongoTool[MongoDB Tool]
-    ReAct -->|Tools| SearchTool[Tavily Search]
-    ReAct -->|LLM| Groq[Groq Llama 3.3]
-  end
-
-  subgraph State & Observability
-    AgentSvc -->|Checkpoint| Atlas[MongoDB Atlas]
-    AgentSvc -->|Tracing| LangSmith[LangSmith Dashboard]
-  end
-  
-  subgraph Security Layer
-    BE -->|OAuth| Passport[Google OAuth 2.0]
-    BE -->|Token| JWT[JWT Generator]
-  end
-
-  BE -->|Proxy| Groq
-  BE -->|Storage| Atlas
-  
-  subgraph DevOps
-    Docker[Docker Containers]
-    Jenkins[Jenkins CI/CD]
-  end
+    User((User)) -->|React UI| Dashboard[Dashboard]
+    Dashboard -->|API Requests| Express[Node.js Express Server]
+    
+    subgraph "Application Layer (Node.js)"
+      Express -->|Route| AgentRoute[Agent Router]
+      AgentRoute -->|Loop| LangGraph[LangGraph.js ReAct Loop]
+      LangGraph -->|Tool| MongoTool[MongoDB Tool]
+      LangGraph -->|Tool| SearchTool[Tavily Search Tool]
+      LangGraph -->|Trace| LangSmith[LangSmith Observability]
+    end
+    
+    MongoTool <-->|Read/Write| MongoDB[(MongoDB Atlas)]
+    SearchTool <-->|Search| Tavily[Tavily Web API]
+    LangGraph <-->|Inference| Groq[Groq Llama 3.3]
 ```
 
 ---
