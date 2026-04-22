@@ -13,15 +13,14 @@ pipeline {
         
         stage('Build & Deploy') {
             steps {
-                // Using 'docker compose' (modern) instead of 'docker-compose'
-                sh 'docker compose down || true'
-                sh 'docker compose up -d --build'
+                // Use --force-recreate to ensure we don't have naming conflicts
+                sh 'docker compose up -d --build --force-recreate --remove-orphans'
             }
         }
 
         stage('Health Check') {
             steps {
-                sh 'sleep 15'
+                sh 'sleep 20'
                 // Check if the app is responding correctly
                 sh 'curl -f http://localhost:3000/health || exit 1'
             }
