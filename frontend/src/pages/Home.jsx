@@ -46,7 +46,6 @@ export default function Home() {
       {/* HERO SECTION */}
       <section style={styles.hero} className="hero-wrap">
         <div style={styles.heroLeft} className="hero-left">
-          <div style={styles.badge}>🚀 Agentic AI 2.0 — Pure MERN Stack</div>
           <h1 style={styles.title} className="hero-title">
             LLM-Based<br />
             <span style={styles.highlight}>Agentic AI</span><br />
@@ -69,7 +68,7 @@ export default function Home() {
           <div style={styles.aboutCard} className="about-card">
             <h2 style={styles.cardTitle}>About This Platform</h2>
             <p style={styles.cardText}>
-              ToolForge is a production-grade, Pure MERN platform with native agentic AI reasoning.
+              ToolForge is a production-grade platform with native agentic AI reasoning.
               Six intelligent agents that actually execute tools, query live MongoDB, and search the web in real-time.
             </p>
             <div style={styles.featureList}>
@@ -114,7 +113,7 @@ export default function Home() {
       </div>
 
       <footer style={styles.footer} className="footer-inner">
-        <p>© 2026 ToolForge — LLM-Based Agentic AI Platform. Pure MERN Stack.</p>
+        <p>© 2026 ToolForge — LLM-Based Agentic AI Platform.</p>
       </footer>
     </div>
   );
