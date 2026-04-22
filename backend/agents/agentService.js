@@ -70,16 +70,19 @@ const tavilySearch = new TavilySearchResults({
 
 const tools = [executeMongoQuery, getCollectionNames, tavilySearch];
 
-// ──── LLM ────
-const llm = new ChatGroq({
-  model: "llama-3.3-70b-versatile",
-  apiKey: process.env.GROQ_API_KEY,  // ← correct key name
-  temperature: 0,
-  maxTokens: 1024,
-});
-
-// ──── Agent ────
-const agent = createReactAgent({ llm, tools, checkpointSaver: checkpointer });
+// ──── LLM & Agent ────
+let agent;
+if (process.env.GROQ_API_KEY) {
+  const llm = new ChatGroq({
+    model: "llama-3.3-70b-versatile",
+    apiKey: process.env.GROQ_API_KEY,
+    temperature: 0,
+    maxTokens: 1024,
+  });
+  agent = createReactAgent({ llm, tools, checkpointSaver: checkpointer });
+} else {
+  console.warn('⚠️ GROQ_API_KEY missing. Agent functionality will be disabled.');
+}
 
 // ──── Run Function with 45-second timeout ────
 export async function runAgent(message, threadId = "default-thread", systemPrompt = null) {
@@ -93,6 +96,10 @@ export async function runAgent(message, threadId = "default-thread", systemPromp
   const timeout = new Promise((_, reject) =>
     setTimeout(() => reject(new Error("Agent timed out after 45 seconds. The LLM may be overloaded — try again.")), 45000)
   );
+
+  if (!agent) {
+    return { output: "Agent is not configured (missing API keys).", steps: [] };
+  }
 
   const agentRun = agent.invoke({ messages }, config);
   const result = await Promise.race([agentRun, timeout]);
