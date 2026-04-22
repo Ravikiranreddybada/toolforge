@@ -11,6 +11,23 @@ export default function Home() {
     <div style={{...styles.container, background: colors.bg.primary, color: colors.text.primary}}>
       <style>{`
         * { box-sizing: border-box; }
+        @keyframes fadeInUp { 
+          from { opacity: 0; transform: translateY(20px); } 
+          to { opacity: 1; transform: translateY(0); } 
+        }
+        @keyframes pulse { 
+          0%, 100% { opacity: 1; } 
+          50% { opacity: 0.7; } 
+        }
+        .hero-title { animation: fadeInUp 0.6s ease-out 0.1s backwards; }
+        .hero-subtitle { animation: fadeInUp 0.6s ease-out 0.2s backwards; }
+        .hero-btns { animation: fadeInUp 0.6s ease-out 0.3s backwards; }
+        .about-card { animation: fadeInUp 0.6s ease-out 0.4s backwards; transition: all 0.3s ease; }
+        .about-card:hover { border-color: #00d4ff33 !important; box-shadow: 0 10px 40px rgba(0,212,255,0.08); }
+        .tech-item { transition: transform 0.3s ease; }
+        .tech-item:hover { transform: translateY(-4px); }
+        .btn-nav-link { transition: all 0.3s ease; }
+        .btn-nav-link:hover { transform: translateY(-2px); }
         @media (max-width: 768px) {
           .nav-inner { padding: 16px 20px !important; }
           .nav-links { display: none !important; }
@@ -55,16 +72,20 @@ export default function Home() {
             Workflow<br />
             Automation
           </h1>
+<<<<<<< HEAD
           <p style={{...styles.subtitle, color: colors.text.secondary}
           <p style={styles.subtitle}>
+=======
+          <p style={styles.subtitle} className="hero-subtitle">
+>>>>>>> b5874ab3505dc1ae15d06d2e7f9b3e0de5c05f3b
             Six specialized AI agents powered by{' '}
             <strong style={{color:'#00d4ff'}}>LangGraph.js</strong> and{' '}
             <strong style={{color:'#a78bfa'}}>Groq Llama 3.3</strong>{' '}
             — plan, reason, use tools, and execute tasks autonomously.
           </p>
           <div style={styles.heroBtns} className="hero-btns">
-            <Link to="/signup" style={styles.btnCreate}>Create Account →</Link>
-            <Link to="/login" style={styles.btnLogin}>Sign In</Link>
+            <Link to="/signup" style={styles.btnCreate} className="btn-nav-link">Create Account →</Link>
+            <Link to="/login" style={styles.btnLogin} className="btn-nav-link">Sign In</Link>
           </div>
         </div>
 
@@ -108,7 +129,7 @@ export default function Home() {
           ['🐳', 'Docker', 'Containerized'],
           ['🔧', 'Jenkins', 'CI/CD'],
         ].map(([icon, name, label]) => (
-          <div style={styles.techItem} key={name}>
+          <div style={styles.techItem} className="tech-item" key={name}>
             <span style={{fontSize:18, marginBottom:4}}>{icon}</span>
             <strong style={{color: colors.text.primary, fontSize:13}}>{name}</strong>
             <span style={{color: colors.text.tertiary, fontSize:11}}>{label}</span>
@@ -238,6 +259,8 @@ const styles = {
     fontSize: '15px',
     fontWeight: '700',
     textDecoration: 'none',
+    transition: 'all 0.3s ease',
+    display: 'inline-block',
   },
   btnLogin: {
     background: 'transparent',
@@ -247,7 +270,9 @@ const styles = {
     fontSize: '15px',
     fontWeight: '600',
     textDecoration: 'none',
-    border: '1.5px solid #333'
+    border: '1.5px solid #333',
+    transition: 'all 0.3s ease',
+    display: 'inline-block',
   },
   heroRight: {
     flex: '1',
