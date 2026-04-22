@@ -303,6 +303,15 @@ export default function Dashboard() {
         ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:#0d0d1a}::-webkit-scrollbar-thumb{background:#222;border-radius:3px}
         @keyframes gflow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
         @keyframes sup{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes hov{from{transform:translateY(0)}to{transform:translateY(-6px)}}
+        .team-card{transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);cursor:pointer}
+        .team-card:hover{transform:translateY(-6px);border-color:currentColor !important;box-shadow:0 20px 40px rgba(0,212,255,0.1)}
+        .team-img{transition:transform 0.3s ease}
+        .team-card:hover .team-img{transform:scale(1.05)}
+        @media (max-width: 1024px) {
+          .team-row { gap: 16px !important; }
+          .team-card { width: 280px !important; flex: 0 0 280px !important; }
+        }
         @media (max-width: 768px) {
           .dash-nav { padding: 10px 16px !important; flex-wrap: wrap; gap: 8px; }
           .dash-nav-tabs { gap: 0 !important; overflow-x: auto; }
@@ -313,6 +322,13 @@ export default function Dashboard() {
           .dash-hero h1 { font-size: 28px !important; }
           .agent-row { flex-direction: column !important; }
           .agent-row input { width: 100% !important; }
+          .team-row { flex-wrap: wrap !important; gap: 20px !important; justify-content: center !important; }
+          .team-card { width: 100% !important; flex: 0 0 100% !important; max-width: 320px !important; }
+        }
+        @media (max-width: 480px) {
+          .dash-content { padding: 16px 12px !important; }
+          .team-card { padding: 24px 16px !important; }
+          .team-card h3 { font-size: 15px !important; }
         }
       `}</style>
 
@@ -336,6 +352,12 @@ export default function Dashboard() {
       </nav>
 
       <div className="dash-content" style={{maxWidth:1080,margin:'0 auto',padding:'48px 32px'}}>
+        
+        {/* LOGO HEADER */}
+        <div style={{textAlign:'center',marginBottom:48,display:'flex',justifyContent:'center',alignItems:'center',gap:16}}>
+          <img src={`${API}/logo.jpg`} alt="ToolForge Logo" style={{height:60,borderRadius:8}} onError={(e)=>{e.target.style.display='none'}} />
+          <div style={{fontSize:28,fontWeight:900}}>Tool<span style={{color:'#00d4ff'}}>Forge</span></div>
+        </div>
 
         {/* AGENTS TAB */}
         {tab==='agents' && (
@@ -387,20 +409,24 @@ export default function Dashboard() {
         {tab==='team' && (
           <div style={{animation:'sup 0.4s ease'}}>
             <div style={{textAlign:'center',marginBottom:40}}>
+              <div style={{display:'inline-block',background:'#00d4ff0d',border:'1px solid #00d4ff22',color:'#00d4ff',fontSize:11,fontWeight:700,padding:'4px 14px',borderRadius:20,marginBottom:16,letterSpacing:1,textTransform:'uppercase'}}>👥 Meet the Team</div>
               <h1 style={{fontSize:38,fontWeight:900,marginBottom:8}}>Our <span style={{color:'#00d4ff'}}>Team</span></h1>
               <p style={{color:'#444',fontSize:15}}>The engineers who built ToolForge</p>
             </div>
-            <div style={{display:'flex',justifyContent:'center',gap:24,flexWrap:'wrap'}}>
+            <div className="team-row" style={{display:'flex',justifyContent:'center',gap:24,flexWrap:'nowrap',alignItems:'stretch'}}>
               {[
-                {i:'R',n:'Bada Ravi Kiran Reddy',r:'Full Stack & AI',c:'#34d399',d:'Designed and implemented the end-to-end ToolForge platform, including the AI reasoning engine, frontend UI, and backend architecture.'},
-                {i:'T',n:'V.Tanish',r:'Frontend & UI/UX',c:'#00d4ff',d:'Specializes in frontend optimization and agentic workflow integration, ensuring a seamless user experience across the platform.'},
-                {i:'E',n:'Kandunuri Eekshith Sai',r:'Backend & Database',c:'#fb923c',d:'Focuses on backend systems and API orchestration, building robust pipelines for autonomous agent execution.'},
+                {img:'rk.jpg',n:'Ravi Kiran',r:'Full Stack & AI',c:'#34d399',d:'Designed and implemented the end-to-end ToolForge platform, including the AI reasoning engine, frontend UI, and backend architecture.'},
+                {img:'eek.jpg',n:'Eekshith Sai',r:'Backend & Database',c:'#fb923c',d:'Focuses on backend systems and API orchestration, building robust pipelines for autonomous agent execution.'},
+                {img:'vt.jpg',n:'Tanish',r:'Frontend & UI/UX',c:'#00d4ff',d:'Specializes in frontend optimization and agentic workflow integration, ensuring a seamless user experience across the platform.'},
               ].map(m=>(
-                <div key={m.n} style={{background:'#0d0d1a',border:`1px solid ${m.c}22`,borderRadius:16,padding:'32px 28px',textAlign:'center',maxWidth:320,flex:'1 1 300px'}}>
-                  <div style={{width:72,height:72,borderRadius:'50%',background:`${m.c}18`,border:`2px solid ${m.c}44`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:28,fontWeight:800,color:m.c,margin:'0 auto 16px'}}>{m.i}</div>
-                  <h3 style={{fontSize:17,fontWeight:800,marginBottom:8}}>{m.n}</h3>
-                  <span style={{display:'inline-block',border:`1px solid ${m.c}44`,color:m.c,fontSize:11,fontWeight:700,padding:'3px 12px',borderRadius:20,marginBottom:14}}>{m.r}</span>
-                  <p style={{color:'#555',fontSize:13,lineHeight:1.7}}>{m.d}</p>
+                <div key={m.n} className="team-card" style={{background:'#0d0d1a',border:`1px solid ${m.c}22`,borderRadius:16,padding:'32px 24px',textAlign:'center',width:'320px',flex:'0 0 320px',display:'flex',flexDirection:'column'}}>
+                  <div style={{width:120,height:120,borderRadius:'50%',background:`linear-gradient(135deg,${m.c}33,${m.c}11)`,border:`3px solid ${m.c}44`,display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 16px',overflow:'hidden',flexShrink:0,position:'relative'}}>
+                    <img src={`${API}/${m.img}`} alt={m.n} className="team-img" style={{width:'100%',height:'100%',objectFit:'cover',position:'absolute'}} onError={(e)=>{e.target.style.display='none'; e.target.parentElement.style.background=`linear-gradient(135deg,${m.c},${m.c}44)`}} />
+                    <div style={{fontSize:40,fontWeight:900,color:m.c,opacity:0.3,zIndex:1}} aria-hidden="true">{m.n.charAt(0)}</div>
+                  </div>
+                  <h3 style={{fontSize:17,fontWeight:800,marginBottom:8,color:'#fff'}}>{m.n}</h3>
+                  <span style={{display:'inline-block',border:`1px solid ${m.c}44`,color:m.c,fontSize:11,fontWeight:700,padding:'4px 12px',borderRadius:20,marginBottom:14,background:`${m.c}0a`}}>{m.r}</span>
+                  <p style={{color:'#666',fontSize:13,lineHeight:1.7,flex:1}}>{m.d}</p>
                 </div>
               ))}
             </div>
