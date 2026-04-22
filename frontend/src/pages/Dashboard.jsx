@@ -238,28 +238,39 @@ export default function Dashboard() {
         ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:#0d0d1a}::-webkit-scrollbar-thumb{background:#222;border-radius:3px}
         @keyframes gflow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
         @keyframes sup{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+        @media (max-width: 768px) {
+          .dash-nav { padding: 10px 16px !important; flex-wrap: wrap; gap: 8px; }
+          .dash-nav-tabs { gap: 0 !important; overflow-x: auto; }
+          .dash-nav-tabs button { padding: 8px 10px !important; font-size: 11px !important; white-space: nowrap; }
+          .dash-nav-user { gap: 6px !important; }
+          .dash-nav-user span { display: none; }
+          .dash-content { padding: 24px 16px !important; }
+          .dash-hero h1 { font-size: 28px !important; }
+          .agent-row { flex-direction: column !important; }
+          .agent-row input { width: 100% !important; }
+        }
       `}</style>
 
       {/* NAV */}
-      <nav style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'13px 48px',borderBottom:'1px solid #111',background:'#08081088',backdropFilter:'blur(10px)',position:'sticky',top:0,zIndex:100}}>
+      <nav className="dash-nav" style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'13px 48px',borderBottom:'1px solid #111',background:'#08081088',backdropFilter:'blur(10px)',position:'sticky',top:0,zIndex:100,flexWrap:'wrap',gap:8}}>
         <Link to="/" style={{display:'flex',alignItems:'center',gap:10,fontSize:18,fontWeight:800,color:'#fff',textDecoration:'none',fontFamily:'Syne,sans-serif'}}>
           <div style={{width:32,height:32,borderRadius:8,background:'linear-gradient(135deg,#00d4ff,#7b2ff7)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:14,fontWeight:800}}>TF</div>
           ToolForge
         </Link>
-        <div style={{display:'flex',gap:2}}>
+        <div className="dash-nav-tabs" style={{display:'flex',gap:2}}>
           {['agents','profile','team'].map(t=>(
             <button key={t} onClick={()=>setTab(t)} style={{background:'transparent',border:'none',borderBottom:`2px solid ${tab===t?'#00d4ff':'transparent'}`,padding:'8px 18px',fontSize:13,fontWeight:600,cursor:'pointer',color:tab===t?'#fff':'#444',fontFamily:'Syne,sans-serif',transition:'all 0.2s'}}>
               {t==='agents'?'🤖 AI Agents':t==='profile'?'👤 Profile':'👥 Team'}
             </button>
           ))}
         </div>
-        <div style={{display:'flex',alignItems:'center',gap:12}}>
+        <div className="dash-nav-user" style={{display:'flex',alignItems:'center',gap:12}}>
           <span style={{color:'#333',fontSize:12,fontFamily:'JetBrains Mono,monospace'}}>@{user?.username}</span>
           <button onClick={handleLogout} style={{background:'transparent',color:'#ff6b6b',border:'1px solid #ff6b6b33',padding:'7px 16px',borderRadius:8,fontSize:12,fontWeight:700,cursor:'pointer',fontFamily:'Syne,sans-serif'}}>Sign Out</button>
         </div>
       </nav>
 
-      <div style={{maxWidth:1080,margin:'0 auto',padding:'48px 32px'}}>
+      <div className="dash-content" style={{maxWidth:1080,margin:'0 auto',padding:'48px 32px'}}>
 
         {/* AGENTS TAB */}
         {tab==='agents' && (
@@ -340,6 +351,6 @@ export default function Dashboard() {
 }
 
 const s = {
-  row: {display:'flex',gap:8},
-  inp: {flex:1,background:'#111',border:'1px solid #1e1e35',borderRadius:8,padding:'10px 14px',color:'#fff',fontSize:13,fontFamily:'JetBrains Mono,monospace',outline:'none',width:'100%'},
+  row: {display:'flex',gap:8,flexWrap:'wrap'},
+  inp: {flex:1,minWidth:0,background:'#111',border:'1px solid #1e1e35',borderRadius:8,padding:'10px 14px',color:'#fff',fontSize:13,fontFamily:'JetBrains Mono,monospace',outline:'none',width:'100%'},
 };

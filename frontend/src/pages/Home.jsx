@@ -7,54 +7,33 @@ export default function Home() {
   return (
     <div style={styles.container}>
       <style>{`
+        * { box-sizing: border-box; }
         @media (max-width: 768px) {
-          .nav-responsive {
-            padding: 18px 20px !important;
-            flex-wrap: wrap;
-            gap: 15px;
-          }
-          .hero-responsive {
-            flex-direction: column !important;
-            padding: 40px 20px !important;
-            text-align: center;
-            min-height: auto !important;
-          }
-          .hero-left-responsive {
-            max-width: 100% !important;
-            margin-bottom: 40px;
-          }
-          .hero-right-responsive {
-            max-width: 100% !important;
-          }
-          .title-responsive {
-            font-size: clamp(2.5rem, 10vw, 4rem) !important;
-            line-height: 1.1 !important;
-          }
-          .btns-responsive {
-            justify-content: center;
-            flex-wrap: wrap;
-          }
-          .tech-bar-responsive {
-            padding: 28px 20px !important;
-            flex-wrap: wrap;
-            gap: 24px !important;
-            justify-content: center;
-          }
-          .footer-responsive {
-            padding: 24px 20px !important;
-          }
+          .nav-inner { padding: 16px 20px !important; }
+          .nav-links { display: none !important; }
+          .hero-wrap { flex-direction: column !important; padding: 40px 20px 32px !important; min-height: auto !important; gap: 32px !important; }
+          .hero-left { max-width: 100% !important; text-align: center; }
+          .hero-title { font-size: clamp(2rem, 9vw, 3.2rem) !important; }
+          .hero-btns { justify-content: center !important; flex-wrap: wrap; }
+          .hero-right { max-width: 100% !important; width: 100% !important; }
+          .tech-bar { padding: 24px 20px !important; gap: 20px !important; flex-wrap: wrap !important; justify-content: center !important; }
+          .footer-inner { padding: 20px 20px !important; }
+        }
+        @media (max-width: 480px) {
+          .hero-title { font-size: clamp(1.8rem, 8vw, 2.6rem) !important; }
+          .about-card { padding: 24px 20px !important; }
         }
       `}</style>
 
       {/* NAVBAR */}
-      <nav style={styles.nav} className="nav-responsive">
+      <nav style={styles.nav} className="nav-inner">
         <Link to="/" style={styles.navLogo}>
-          <div style={styles.logoIcon}>AP</div>
+          <div style={styles.logoIcon}>TF</div>
           <span>ToolForge</span>
         </Link>
-        <div style={styles.navLinks}>
+        <div style={styles.navLinks} className="nav-links">
           {user ? (
-            <Link to="/dashboard" style={styles.btnNav}>Dashboard</Link>
+            <Link to="/dashboard" style={styles.btnNav}>Dashboard →</Link>
           ) : (
             <>
               <Link to="/login" style={styles.link}>Login</Link>
@@ -65,98 +44,77 @@ export default function Home() {
       </nav>
 
       {/* HERO SECTION */}
-      <section style={styles.hero} className="hero-responsive">
-        <div style={styles.heroLeft} className="hero-left-responsive">
-          <h1 style={styles.title} className="title-responsive">
+      <section style={styles.hero} className="hero-wrap">
+        <div style={styles.heroLeft} className="hero-left">
+          <div style={styles.badge}>🚀 Agentic AI 2.0 — Pure MERN Stack</div>
+          <h1 style={styles.title} className="hero-title">
             LLM-Based<br />
             <span style={styles.highlight}>Agentic AI</span><br />
-            for Tool-Using<br />
-            Reasoning<br />
-            Workflows<br />
+            Workflow<br />
             Automation
           </h1>
           <p style={styles.subtitle}>
-            Secure AI Workflow Platform — powered by advanced reasoning agents, 
-            tool orchestration, and intelligent automation pipelines.
+            Six specialized AI agents powered by{' '}
+            <strong style={{color:'#00d4ff'}}>LangGraph.js</strong> and{' '}
+            <strong style={{color:'#a78bfa'}}>Groq Llama 3.3</strong>{' '}
+            — plan, reason, use tools, and execute tasks autonomously.
           </p>
-          <div style={styles.heroBtns} className="btns-responsive">
+          <div style={styles.heroBtns} className="hero-btns">
             <Link to="/signup" style={styles.btnCreate}>Create Account →</Link>
             <Link to="/login" style={styles.btnLogin}>Sign In</Link>
           </div>
         </div>
 
-        <div style={styles.heroRight} className="hero-right-responsive">
-          <div style={styles.aboutCard}>
+        <div style={styles.heroRight} className="hero-right">
+          <div style={styles.aboutCard} className="about-card">
             <h2 style={styles.cardTitle}>About This Platform</h2>
             <p style={styles.cardText}>
-              ToolForge is a next-generation platform that lets you build, deploy, 
-              and monitor LLM-powered agents that can reason, use tools, and 
-              automate complex workflows.
+              ToolForge is a production-grade, Pure MERN platform with native agentic AI reasoning.
+              Six intelligent agents that actually execute tools, query live MongoDB, and search the web in real-time.
             </p>
             <div style={styles.featureList}>
-              <div style={styles.featureItem}>
-                <div style={styles.featureIcon}>🤖</div>
-                <div style={styles.featureText}>
-                  <strong>Agentic Reasoning</strong>
-                  <span>Chain-of-thought agents that plan and act autonomously</span>
+              {[
+                ['🤖', 'ReAct Loop (LangGraph.js)', 'Think → Act → Observe using real tools, natively in Node.js'],
+                ['🔍', '6 Specialized Agents', 'Research, MongoDB, Code Review, Workflow, Prompt & API agents'],
+                ['🔒', 'JWT Authentication', 'Stateless JWT + Google OAuth 2.0, bcrypt password hashing'],
+                ['⚡', 'Full DevOps Pipeline', 'Docker + Jenkins CI/CD + Render cloud + LangSmith observability'],
+              ].map(([icon, title, desc]) => (
+                <div style={styles.featureItem} key={title}>
+                  <div style={styles.featureIcon}>{icon}</div>
+                  <div style={styles.featureText}>
+                    <strong style={{color:'#fff', display:'block', marginBottom:2}}>{title}</strong>
+                    <span style={{color:'#666', fontSize:13}}>{desc}</span>
+                  </div>
                 </div>
-              </div>
-              <div style={styles.featureItem}>
-                <div style={styles.featureIcon}>🔧</div>
-                <div style={styles.featureText}>
-                  <strong>Tool Orchestration</strong>
-                  <span>Connect APIs, databases, search engines and more</span>
-                </div>
-              </div>
-              <div style={styles.featureItem}>
-                <div style={styles.featureIcon}>🔒</div>
-                <div style={styles.featureText}>
-                  <strong>Secure & Authenticated</strong>
-                  <span>Session auth, bcrypt hashing, session management</span>
-                </div>
-              </div>
-              <div style={styles.featureItem}>
-                <div style={styles.featureIcon}>⚡</div>
-                <div style={styles.featureText}>
-                  <strong>Fast Automation</strong>
-                  <span>Run workflows in parallel with intelligent retry logic</span>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
       {/* TECH BAR */}
-      <div style={styles.techBar} className="tech-bar-responsive">
-        <div style={styles.techItem}>
-          <strong>MongoDB</strong>
-          <span>Database</span>
-        </div>
-        <div style={styles.techItem}>
-          <strong>Express</strong>
-          <span>API</span>
-        </div>
-        <div style={styles.techItem}>
-          <strong>React</strong>
-          <span>Frontend</span>
-        </div>
-        <div style={styles.techItem}>
-          <strong>Node.js</strong>
-          <span>Runtime</span>
-        </div>
-        <div style={styles.techItem}>
-          <strong>Docker</strong>
-          <span>Containerized</span>
-        </div>
-        <div style={styles.techItem}>
-          <strong>Jenkins</strong>
-          <span>CI/CD</span>
-        </div>
+      <div style={styles.techBar} className="tech-bar">
+        {[
+          ['🍃', 'MongoDB', 'Atlas Database'],
+          ['⚡', 'Express', 'REST API'],
+          ['⚛️', 'React', 'Vite Frontend'],
+          ['🟢', 'Node.js', 'ESM Runtime'],
+          ['🦜', 'LangGraph.js', 'ReAct Engine'],
+          ['🤖', 'Groq', 'Llama 3.3 LLM'],
+          ['🔵', 'LangSmith', 'Observability'],
+          ['🐳', 'Docker', 'Containerized'],
+          ['🔧', 'Jenkins', 'CI/CD'],
+        ].map(([icon, name, label]) => (
+          <div style={styles.techItem} key={name}>
+            <span style={{fontSize:18, marginBottom:4}}>{icon}</span>
+            <strong style={{color:'#fff', fontSize:13}}>{name}</strong>
+            <span style={{color:'#555', fontSize:11}}>{label}</span>
+          </div>
+        ))}
       </div>
 
-      <footer style={styles.footer} className="footer-responsive">
-        <p>© 2026 ToolForge — LLM-Based Agentic AI Platform. Built with ❤️ by the team.</p>
+      <footer style={styles.footer} className="footer-inner">
+        <p>© 2026 ToolForge — LLM-Based Agentic AI Platform. Pure MERN Stack.</p>
       </footer>
     </div>
   );
@@ -177,7 +135,6 @@ const styles = {
     justifyContent: 'space-between',
     padding: '18px 60px',
     borderBottom: '1px solid #1e1e2e',
-    transition: 'all 0.3s ease'
   },
   navLogo: {
     display: 'flex',
@@ -196,7 +153,9 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: '18px'
+    fontSize: '13px',
+    fontWeight: '800',
+    color: '#fff'
   },
   navLinks: {
     display: 'flex',
@@ -216,7 +175,8 @@ const styles = {
     fontWeight: '600',
     padding: '9px 22px',
     borderRadius: '8px',
-    textDecoration: 'none'
+    textDecoration: 'none',
+    fontSize: '14px'
   },
   hero: {
     display: 'flex',
@@ -225,11 +185,23 @@ const styles = {
     padding: '80px 60px',
     minHeight: '85vh',
     gap: '40px',
-    transition: 'all 0.3s ease'
   },
   heroLeft: {
     flex: '1',
-    maxWidth: '640px'
+    maxWidth: '620px'
+  },
+  badge: {
+    display: 'inline-block',
+    background: '#00d4ff0d',
+    border: '1px solid #00d4ff33',
+    color: '#00d4ff',
+    fontSize: '11px',
+    fontWeight: '700',
+    padding: '5px 14px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    letterSpacing: '0.5px',
+    textTransform: 'uppercase'
   },
   title: {
     fontSize: 'clamp(2.5rem, 5vw, 4.5rem)',
@@ -239,14 +211,16 @@ const styles = {
     marginBottom: '20px'
   },
   highlight: {
-    color: '#00d4ff'
+    background: 'linear-gradient(135deg, #00d4ff, #7b2ff7)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent'
   },
   subtitle: {
-    fontSize: '17px',
-    color: '#888',
-    lineHeight: '1.7',
+    fontSize: '16px',
+    color: '#777',
+    lineHeight: '1.8',
     marginBottom: '40px',
-    maxWidth: '520px'
+    maxWidth: '500px'
   },
   heroBtns: {
     display: 'flex',
@@ -256,45 +230,43 @@ const styles = {
   btnCreate: {
     background: 'linear-gradient(135deg, #00d4ff, #7b2ff7)',
     color: '#fff',
-    padding: '14px 32px',
+    padding: '14px 28px',
     borderRadius: '10px',
-    fontSize: '16px',
+    fontSize: '15px',
     fontWeight: '700',
     textDecoration: 'none',
-    border: 'none',
-    cursor: 'pointer'
   },
   btnLogin: {
     background: 'transparent',
     color: '#ccc',
-    padding: '14px 32px',
+    padding: '14px 28px',
     borderRadius: '10px',
-    fontSize: '16px',
+    fontSize: '15px',
     fontWeight: '600',
     textDecoration: 'none',
     border: '1.5px solid #333'
   },
   heroRight: {
     flex: '1',
-    maxWidth: '480px'
+    maxWidth: '460px'
   },
   aboutCard: {
-    background: '#11111d',
+    background: '#0d0d1a',
     border: '1px solid #1e1e35',
     borderRadius: '16px',
-    padding: '36px'
+    padding: '32px'
   },
   cardTitle: {
-    fontSize: '22px',
+    fontSize: '20px',
     fontWeight: '700',
     color: '#fff',
-    marginBottom: '16px'
+    marginBottom: '12px'
   },
   cardText: {
-    color: '#888',
-    fontSize: '15px',
+    color: '#666',
+    fontSize: '14px',
     lineHeight: '1.7',
-    marginBottom: '24px'
+    marginBottom: '20px'
   },
   featureList: {
     display: 'flex',
@@ -307,16 +279,16 @@ const styles = {
     gap: '12px'
   },
   featureIcon: {
-    width: '32px',
-    height: '32px',
-    background: 'linear-gradient(135deg, #00d4ff22, #7b2ff722)',
-    border: '1px solid #00d4ff44',
+    width: '34px',
+    height: '34px',
+    background: 'linear-gradient(135deg, #00d4ff15, #7b2ff715)',
+    border: '1px solid #00d4ff33',
     borderRadius: '8px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     fontSize: '15px',
-    flexShrink: '0'
+    flexShrink: 0
   },
   featureText: {
     flex: '1'
@@ -324,14 +296,18 @@ const styles = {
   techBar: {
     background: '#0d0d18',
     borderTop: '1px solid #1a1a2e',
-    padding: '28px 60px',
+    padding: '24px 60px',
     display: 'flex',
-    gap: '48px',
-    transition: 'all 0.3s ease'
+    gap: '36px',
+    alignItems: 'center',
+    overflowX: 'auto'
   },
   techItem: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    alignItems: 'center',
+    textAlign: 'center',
+    flexShrink: 0
   },
   footer: {
     borderTop: '1px solid #1a1a2e',
@@ -339,7 +315,5 @@ const styles = {
     textAlign: 'center',
     color: '#444',
     fontSize: '13px',
-    transition: 'all 0.3s ease'
   }
 };
-
