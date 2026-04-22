@@ -161,20 +161,12 @@ const Btn = ({children, onClick, disabled, color, block}) => (
   </button>
 );
 
-<<<<<<< HEAD
 function AgentCard({ icon, title, desc, color, badge, children }) {
   const { colors } = useTheme();
   return (
     <div style={{background: colors.bg.secondary,border:`1px solid ${color}22`,borderRadius:16,overflow:'hidden'}}>
       <div style={{padding:'18px 24px',borderBottom:`1px solid ${colors.border.primary}`,display:'flex',alignItems:'center',gap:12}}>
         <div style={{width:44,height:44,borderRadius:10,background:`${color}18`,border:`1px solid ${color}33`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,flexShrink:0}}>{icon}</div>
-=======
-function AgentCard({ icon, title, desc, color, badge, children, isExpanded, onToggle }) {
-  return (
-    <div style={{background:'#0d0d1a',border:`1px solid ${color}22`,borderRadius:16,overflow:'hidden',transition:'all 0.3s ease',cursor:'pointer'}}>
-      <div onClick={onToggle} style={{padding:'18px 24px',borderBottom:'1px solid #111',display:'flex',alignItems:'center',gap:12,cursor:'pointer',userSelect:'none',transition:'all 0.3s ease',background:isExpanded?`${color}08`:'transparent'}}>
-        <div style={{width:44,height:44,borderRadius:10,background:`${color}18`,border:`1px solid ${color}33`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,flexShrink:0,transition:'transform 0.3s ease'}}>{icon}</div>
->>>>>>> b5874ab3505dc1ae15d06d2e7f9b3e0de5c05f3b
         <div style={{flex:1}}>
           <div style={{display:'flex',alignItems:'center',gap:8}}>
             <h3 style={{fontSize:16,fontWeight:800,color,fontFamily:'Syne,sans-serif',margin:0}}>{title}</h3>
@@ -182,7 +174,7 @@ function AgentCard({ icon, title, desc, color, badge, children, isExpanded, onTo
           </div>
           <p style={{color: colors.text.tertiary,fontSize:12,margin:'2px 0 0'}}>{desc}</p>
         </div>
-        <div style={{fontSize:20,transform:isExpanded?'rotate(180deg)':'rotate(0deg)',transition:'transform 0.3s ease',color}}>↓</div>
+      </div>
       </div>
       {isExpanded && <div style={{padding:'20px 24px',borderTop:`1px solid ${color}22`,maxHeight:'600px',overflowY:'auto'}}>{children}</div>}
     </div>
@@ -425,37 +417,20 @@ export default function Dashboard() {
         {tab==='team' && (
           <div style={{animation:'sup 0.4s ease'}}>
             <div style={{textAlign:'center',marginBottom:40}}>
-<<<<<<< HEAD
               <h1 style={{fontSize:38,fontWeight:900,marginBottom:8, color: colors.text.primary}}>Our <span style={{color:'#00d4ff'}}>Team</span></h1>
               <p style={{color: colors.text.secondary,fontSize:15}}>The engineers who built ToolForge</p>
-=======
-              <div style={{display:'inline-block',background:'#00d4ff0d',border:'1px solid #00d4ff22',color:'#00d4ff',fontSize:11,fontWeight:700,padding:'4px 14px',borderRadius:20,marginBottom:16,letterSpacing:1,textTransform:'uppercase'}}>👥 Meet the Team</div>
-              <h1 style={{fontSize:38,fontWeight:900,marginBottom:8}}>Our <span style={{color:'#00d4ff'}}>Team</span></h1>
-              <p style={{color:'#444',fontSize:15}}>The engineers who built ToolForge</p>
->>>>>>> b5874ab3505dc1ae15d06d2e7f9b3e0de5c05f3b
             </div>
             <div className="team-row" style={{display:'flex',justifyContent:'center',gap:24,flexWrap:'nowrap',alignItems:'stretch'}}>
               {[
-                {img:'rk.jpg',n:'Ravi Kiran',r:'Full Stack & AI',c:'#34d399',d:'Designed and implemented the end-to-end ToolForge platform, including the AI reasoning engine, frontend UI, and backend architecture.'},
-                {img:'eek.jpg',n:'Eekshith Sai',r:'Backend & Database',c:'#fb923c',d:'Focuses on backend systems and API orchestration, building robust pipelines for autonomous agent execution.'},
-                {img:'vt.jpg',n:'Tanish',r:'Frontend & UI/UX',c:'#00d4ff',d:'Specializes in frontend optimization and agentic workflow integration, ensuring a seamless user experience across the platform.'},
+                {i:'R',n:'Bada Ravi Kiran Reddy',r:'Full Stack & AI',c:'#34d399',d:'Designed and implemented the end-to-end ToolForge platform, including the AI reasoning engine, frontend UI, and backend architecture.'},
+                {i:'E',n:'Kandunuri Eekshith Sai',r:'Backend & Database',c:'#fb923c',d:'Focuses on backend systems and API orchestration, building robust pipelines for autonomous agent execution.'},
+                {i:'T',n:'V.Tanish',r:'Frontend & UI/UX',c:'#00d4ff',d:'Specializes in frontend optimization and agentic workflow integration, ensuring a seamless user experience across the platform.'},
               ].map(m=>(
-<<<<<<< HEAD
                 <div key={m.n} style={{background: colors.bg.secondary,border:`1px solid ${m.c}22`,borderRadius:16,padding:'32px 28px',textAlign:'center',maxWidth:320,flex:'1 1 300px'}}>
                   <div style={{width:72,height:72,borderRadius:'50%',background:`${m.c}18`,border:`2px solid ${m.c}44`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:28,fontWeight:800,color:m.c,margin:'0 auto 16px'}}>{m.i}</div>
                   <h3 style={{fontSize:17,fontWeight:800,marginBottom:8, color: colors.text.primary}}>{m.n}</h3>
                   <span style={{display:'inline-block',border:`1px solid ${m.c}44`,color:m.c,fontSize:11,fontWeight:700,padding:'3px 12px',borderRadius:20,marginBottom:14}}>{m.r}</span>
                   <p style={{color: colors.text.secondary,fontSize:13,lineHeight:1.7}}>{m.d}</p>
-=======
-                <div key={m.n} className="team-card" style={{background:'#0d0d1a',border:`1px solid ${m.c}22`,borderRadius:16,padding:'32px 24px',textAlign:'center',width:'320px',flex:'0 0 320px',display:'flex',flexDirection:'column'}}>
-                  <div style={{width:120,height:120,borderRadius:'50%',background:`linear-gradient(135deg,${m.c}33,${m.c}11)`,border:`3px solid ${m.c}44`,display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 16px',overflow:'hidden',flexShrink:0,position:'relative'}}>
-                    <img src={`${API}/${m.img}`} alt={m.n} className="team-img" style={{width:'100%',height:'100%',objectFit:'cover',position:'absolute'}} onError={(e)=>{e.target.style.display='none'; e.target.parentElement.style.background=`linear-gradient(135deg,${m.c},${m.c}44)`}} />
-                    <div style={{fontSize:40,fontWeight:900,color:m.c,opacity:0.3,zIndex:1}} aria-hidden="true">{m.n.charAt(0)}</div>
-                  </div>
-                  <h3 style={{fontSize:17,fontWeight:800,marginBottom:8,color:'#fff'}}>{m.n}</h3>
-                  <span style={{display:'inline-block',border:`1px solid ${m.c}44`,color:m.c,fontSize:11,fontWeight:700,padding:'4px 12px',borderRadius:20,marginBottom:14,background:`${m.c}0a`}}>{m.r}</span>
-                  <p style={{color:'#666',fontSize:13,lineHeight:1.7,flex:1}}>{m.d}</p>
->>>>>>> b5874ab3505dc1ae15d06d2e7f9b3e0de5c05f3b
                 </div>
               ))}
             </div>
