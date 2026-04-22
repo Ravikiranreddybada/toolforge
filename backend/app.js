@@ -37,6 +37,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use('/', authRoutes);
+app.use('/api', agentRoutes);
 app.get('/health', (req, res) => res.status(200).json({ status: 'ok' }));
 
 mongoose.connect(process.env.MONGODB_URI, {
