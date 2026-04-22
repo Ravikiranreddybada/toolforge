@@ -1,8 +1,8 @@
-require('dotenv').config({ quiet: true });
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const User = require('../models/User');
+import 'dotenv/config';
+import passport from 'passport';
+import { Strategy as LocalStrategy } from 'passport-local';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import User from '../models/User.js';
 
 // Serialize user into session
 passport.serializeUser((user, done) => {
@@ -88,4 +88,4 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   console.warn('⚠️  Google OAuth not configured. Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET env vars to enable.');
 }
 
-module.exports = passport;
+export default passport;

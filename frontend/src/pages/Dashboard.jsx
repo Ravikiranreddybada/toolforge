@@ -4,333 +4,163 @@ import { useAuth } from '../context/AuthContext';
 
 const API = import.meta.env.VITE_API_URL || 'https://toolforge-df1j.onrender.com';
 
-// ─── Task 1: Web Research Agent ──────────────────────────────────────────────
-function WebResearchAgent() {
-  const [query, setQuery] = useState('');
+// ─── Reusable Agent Component (Agentic 2.0) ──────────────────────────────────
+function ReusableAgent({ id, icon, title, desc, color, badge, placeholder, type, extraFields }) {
+  const [msg, setMsg] = useState('');
   const [result, setResult] = useState('');
+  const [steps, setSteps] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [stepIdx, setStepIdx] = useState(0);
-  const steps = ['🔍 Planning research strategy...', '📡 Querying knowledge sources...', '🧠 Synthesizing findings...'];
+  const [fields, setFields] = useState(extraFields?.reduce((acc, f) => ({...acc, [f.name]: f.default}), {}) || {});
 
   const run = async () => {
-    if (!query.trim()) return;
-    setLoading(true); setResult(''); setStepIdx(0);
-    const iv = setInterval(() => setStepIdx(i => (i + 1) % steps.length), 900);
+    let finalMsg = msg;
+    if (extraFields) {
+      const fieldDetails = extraFields.map(f => `${f.label}: ${fields[f.name]}`).join('\n');
+      finalMsg = `${fieldDetails}\n\nRequest: ${msg}`;
+    }
+
+    if (!finalMsg.trim()) return;
+    setLoading(true); setResult(''); setSteps([]);
     try {
-      const res = await fetch(`${API}/api/agent`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('ap_token')}` },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514', max_tokens: 1000,
-          system: `You are a Web Research Agent. For any research query:
-1. Break it into sub-questions
-2. Synthesize a comprehensive answer with **bold** section headers
-3. End with a Key Takeaways bullet list using - bullets
-Be concise but thorough. Use emojis for section icons.`,
-          messages: [{ role: 'user', content: `Research: ${query}` }]
+      const res = await fetch(`${API}/api/automate`, {
+        method: 'POST', 
+        headers: { 
+          'Content-Type': 'application/json', 
+          'Authorization': `Bearer ${localStorage.getItem('ap_token')}` 
+        },
+        body: JSON.stringify({ 
+          message: finalMsg,
+          agentType: type,
+          threadId: `user-${id}-${type}`
         })
       });
       const data = await res.json();
       if (!res.ok) {
         setResult('❌ Error: ' + (data.error || `Server error ${res.status}`));
       } else {
-        setResult(data.content?.[0]?.text || 'No response.');
+        setResult(data.output || 'No response.');
+        setSteps(data.steps || []);
       }
     } catch (e) { setResult('❌ Error: ' + e.message); }
-    clearInterval(iv); setLoading(false);
+    setLoading(false);
   };
 
   return (
-    <AgentCard icon="🔍" title="Web Research Agent" desc="Autonomously researches any topic using chain-of-thought reasoning" color="#00d4ff" badge="Task 1">
+    <AgentCard icon={icon} title={title} desc={desc} color={color} badge={badge}>
+      {extraFields?.map(f => (
+        <div key={f.name} style={{marginBottom:12}}>
+          <Lbl>{f.label}</Lbl>
+          {f.type === 'textarea' ? (
+            <textarea 
+              style={{...s.inp, height:60, resize:'vertical', fontFamily:'monospace', fontSize:12, width:'100%'}} 
+              value={fields[f.name]} 
+              onChange={e => setFields({...fields, [f.name]: e.target.value})} 
+            />
+          ) : (
+            <input 
+              style={{...s.inp, width:'100%'}} 
+              value={fields[f.name]} 
+              onChange={e => setFields({...fields, [f.name]: e.target.value})} 
+            />
+          )}
+        </div>
+      ))}
+      
+      <Lbl>{extraFields ? 'Request' : 'Input'}</Lbl>
       <div style={s.row}>
-        <input style={s.inp} value={query} onChange={e=>setQuery(e.target.value)} onKeyDown={e=>e.key==='Enter'&&run()} placeholder="e.g. How do transformer models work? What is LangChain?" />
-        <Btn onClick={run} disabled={loading} color="#00d4ff">{loading?'…':'Research →'}</Btn>
+        <input style={s.inp} value={msg} onChange={e=>setMsg(e.target.value)} onKeyDown={e=>e.key==='Enter'&&run()} placeholder={placeholder} />
+        <Btn onClick={run} disabled={loading} color={color}>{loading?'…':'Run Agent →'}</Btn>
       </div>
-      {loading && <Loader step={steps[stepIdx]} color="#00d4ff" />}
-      {result && <Out text={result} color="#00d4ff" />}
+      
+      {loading && <Loader step="Agent is thinking and executing tools..." color={color} />}
+      
+      {steps.length > 0 && (
+        <div style={{marginTop:15, background:'#ffffff05', padding:12, borderRadius:8, border:'1px solid #ffffff11'}}>
+          <div style={{fontSize:10, color:'#555', marginBottom:8, textTransform:'uppercase', fontWeight:800}}>Live execution Trace</div>
+          {steps.map((st, i) => (
+            <div key={i} style={{fontSize:11, marginBottom:6, fontFamily:'JetBrains Mono, monospace'}}>
+              {st.type === 'action' ? (
+                <div style={{color: color}}>🛠️ Calling: <span style={{color:'#fff'}}>{st.tool}</span></div>
+              ) : (
+                <div style={{color:'#34d399', paddingLeft:10, borderLeft:`2px solid ${color}33`, margin:'4px 0'}}>👁️ Result: <span style={{color:'#888'}}>{st.content?.substring(0, 100)}...</span></div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {result && <Out text={result} color={color} />}
     </AgentCard>
   );
 }
 
-// ─── Task 2: SQL Query Generator ─────────────────────────────────────────────
-function SQLAgent() {
-  const [schema, setSchema] = useState('users(id, name, email, created_at), orders(id, user_id, product, amount, status, created_at)');
-  const [nlq, setNlq] = useState('');
-  const [result, setResult] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [stepIdx, setStepIdx] = useState(0);
-  const steps = ['📊 Analyzing schema...', '🧩 Identifying tables & joins...', '✍️ Generating optimized SQL...'];
-
-  const run = async () => {
-    if (!nlq.trim()) return;
-    setLoading(true); setResult(''); setStepIdx(0);
-    const iv = setInterval(() => setStepIdx(i => (i+1) % steps.length), 900);
-    try {
-      const res = await fetch(`${API}/api/agent`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('ap_token')}` },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514', max_tokens: 1000,
-          system: `You are a SQL Query Generation Agent. Given a schema and natural language request:
-**🧠 Reasoning:** brief approach explanation
-**📝 SQL Query:**
-\`\`\`sql
-(query here)
-\`\`\`
-**📌 Explanation:** what it does
-**⚡ Performance Note:** tips`,
-          messages: [{ role: 'user', content: `Schema: ${schema}\nRequest: ${nlq}` }]
-        })
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setResult('❌ Error: ' + (data.error || `Server error ${res.status}`));
-      } else {
-        setResult(data.content?.[0]?.text || 'No response.');
-      }
-    } catch (e) { setResult('❌ Error: ' + e.message); }
-    clearInterval(iv); setLoading(false);
-  };
-
+// ─── Task 1: Web Research Agent ──────────────────────────────────────────────
+function WebResearchAgent() {
   return (
-    <AgentCard icon="🗄️" title="SQL Query Generator" desc="Converts natural language into optimized SQL using reasoning over your schema" color="#a78bfa" badge="Task 2">
-      <Lbl>Database Schema</Lbl>
-      <textarea style={{...s.inp, height:60, resize:'vertical', fontFamily:'monospace', fontSize:12, marginBottom:10, display:'block', width:'100%'}} value={schema} onChange={e=>setSchema(e.target.value)} />
-      <Lbl>Natural Language Request</Lbl>
-      <div style={s.row}>
-        <input style={s.inp} value={nlq} onChange={e=>setNlq(e.target.value)} onKeyDown={e=>e.key==='Enter'&&run()} placeholder="e.g. Show top 5 users by total order amount this month" />
-        <Btn onClick={run} disabled={loading} color="#a78bfa">{loading?'…':'Generate →'}</Btn>
-      </div>
-      {loading && <Loader step={steps[stepIdx]} color="#a78bfa" />}
-      {result && <Out text={result} color="#a78bfa" />}
-    </AgentCard>
+    <ReusableAgent 
+      type="research" id="1" icon="🔍" title="Web Research Agent" 
+      desc="Autonomously research any topic using real-time Tavily search" 
+      color="#00d4ff" badge="Task 1" placeholder="e.g. Current status of SpaceX Starship?"
+    />
+  );
+}
+
+// ─── Task 2: MongoDB Query Generator ─────────────────────────────────────────
+function SQLAgent() {
+  return (
+    <ReusableAgent 
+      type="mongodb" id="2" icon="🗄️" title="MongoDB Query Generator" 
+      desc="Generates and executes MQL/Mongoose queries against your live collections" 
+      color="#a78bfa" badge="Task 2" placeholder="e.g. Find all users who joined this week"
+      extraFields={[{ name: 'schema', label: 'Known Collections/Schema', default: 'users, orders, analytics', type: 'textarea' }]}
+    />
   );
 }
 
 // ─── Task 3: Code Review Agent ───────────────────────────────────────────────
 function CodeReviewAgent() {
-  const [code, setCode] = useState('');
-  const [lang, setLang] = useState('JavaScript');
-  const [result, setResult] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [stepIdx, setStepIdx] = useState(0);
-  const steps = ['🔬 Parsing code structure...', '🐛 Scanning for bugs & issues...', '✨ Generating improvement plan...'];
-
-  const run = async () => {
-    if (!code.trim()) return;
-    setLoading(true); setResult(''); setStepIdx(0);
-    const iv = setInterval(() => setStepIdx(i => (i+1) % steps.length), 900);
-    try {
-      const res = await fetch(`${API}/api/agent`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('ap_token')}` },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514', max_tokens: 1000,
-          system: `You are a Code Review Agent for ${lang}. Analyze and provide:
-**🐛 Bugs & Issues:** list bugs/errors
-**⚡ Performance:** bottlenecks
-**🔒 Security:** vulnerabilities
-**📐 Code Quality:** readability/structure
-**✅ Refactored Version:** improved snippet
-**📊 Score:** X/10 with verdict`,
-          messages: [{ role: 'user', content: `Review this ${lang}:\n\`\`\`${lang.toLowerCase()}\n${code}\n\`\`\`` }]
-        })
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setResult('❌ Error: ' + (data.error || `Server error ${res.status}`));
-      } else {
-        setResult(data.content?.[0]?.text || 'No response.');
-      }
-    } catch (e) { setResult('❌ Error: ' + e.message); }
-    clearInterval(iv); setLoading(false);
-  };
-
   return (
-    <AgentCard icon="🔬" title="Code Review Agent" desc="Reviews code for bugs, security vulnerabilities, performance issues, and suggests refactors" color="#34d399" badge="Task 3">
-      <div style={{display:'flex',gap:8,marginBottom:12,flexWrap:'wrap'}}>
-        {['JavaScript','Python','Java','TypeScript','SQL','Go'].map(l => (
-          <button key={l} onClick={()=>setLang(l)} style={{padding:'4px 14px',borderRadius:20,border:`1.5px solid ${lang===l?'#34d399':'#222'}`,background:lang===l?'#34d39918':'transparent',color:lang===l?'#34d399':'#555',fontSize:12,cursor:'pointer',fontWeight:lang===l?700:400,fontFamily:'Syne,sans-serif'}}>
-            {l}
-          </button>
-        ))}
-      </div>
-      <textarea style={{...s.inp,height:120,resize:'vertical',fontFamily:'monospace',fontSize:12,marginBottom:10,display:'block',width:'100%'}} value={code} onChange={e=>setCode(e.target.value)} placeholder={`Paste your ${lang} code here...`} />
-      <Btn onClick={run} disabled={loading} color="#34d399" block>🔬 {loading?'Reviewing...':'Review Code →'}</Btn>
-      {loading && <Loader step={steps[stepIdx]} color="#34d399" />}
-      {result && <Out text={result} color="#34d399" />}
-    </AgentCard>
+    <ReusableAgent 
+      type="codereview" id="3" icon="🔬" title="Code Review Agent" 
+      desc="Analyzes code for bugs, security issues, and structural improvements" 
+      color="#34d399" badge="Task 3" placeholder="Paste your code snippet here..."
+      extraFields={[{ name: 'lang', label: 'Language', default: 'JavaScript' }]}
+    />
   );
 }
 
 // ─── Task 4: Workflow Automation Planner ──────────────────────────────────────
 function WorkflowPlannerAgent() {
-  const [goal, setGoal] = useState('');
-  const [tools, setTools] = useState('Gmail, Google Sheets, Slack, REST API, MongoDB');
-  const [result, setResult] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [stepIdx, setStepIdx] = useState(0);
-  const steps = ['🎯 Analyzing workflow goal...','🔧 Selecting optimal tools...','📋 Building execution plan...','⚙️ Generating automation code...'];
-
-  const run = async () => {
-    if (!goal.trim()) return;
-    setLoading(true); setResult(''); setStepIdx(0);
-    const iv = setInterval(() => setStepIdx(i => (i+1) % steps.length), 900);
-    try {
-      const res = await fetch(`${API}/api/agent`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('ap_token')}` },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514', max_tokens: 1000,
-          system: `You are a Workflow Automation Planner Agent. Given a goal and tools:
-**🎯 Goal Analysis:** break down what needs to happen
-**🔧 Tool Selection:** which tools and why
-**📋 Step-by-Step Plan:** numbered execution steps
-**💻 LangChain / Python Skeleton:** show code outline
-**⏱️ Time Saved:** manual vs automated estimate
-**⚠️ Edge Cases:** potential issues and mitigations
-Be practical and specific.`,
-          messages: [{ role: 'user', content: `Goal: ${goal}\nAvailable Tools: ${tools}` }]
-        })
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setResult('❌ Error: ' + (data.error || `Server error ${res.status}`));
-      } else {
-        setResult(data.content?.[0]?.text || 'No response.');
-      }
-    } catch (e) { setResult('❌ Error: ' + e.message); }
-    clearInterval(iv); setLoading(false);
-  };
-
   return (
-    <AgentCard icon="⚙️" title="Workflow Automation Planner" desc="Plans and generates multi-tool automation pipelines for any enterprise workflow goal" color="#fb923c" badge="Task 4">
-      <Lbl>Available Tools / APIs</Lbl>
-      <input style={{...s.inp, marginBottom:10, display:'block', width:'100%'}} value={tools} onChange={e=>setTools(e.target.value)} placeholder="Gmail, Slack, Database, REST API..." />
-      <Lbl>Automation Goal</Lbl>
-      <div style={s.row}>
-        <input style={s.inp} value={goal} onChange={e=>setGoal(e.target.value)} onKeyDown={e=>e.key==='Enter'&&run()} placeholder="e.g. Auto-send weekly sales report from DB to Slack every Monday" />
-        <Btn onClick={run} disabled={loading} color="#fb923c">{loading?'…':'Plan →'}</Btn>
-      </div>
-      {loading && <Loader step={steps[stepIdx]} color="#fb923c" />}
-      {result && <Out text={result} color="#fb923c" />}
-    </AgentCard>
+    <ReusableAgent 
+      type="workflow" id="4" icon="⚙️" title="Workflow Automation Planner" 
+      desc="Plans complex multi-tool automation pipelines" 
+      color="#fb923c" badge="Task 4" placeholder="e.g. Create a flow to backup MongoDB to AWS every night"
+      extraFields={[{ name: 'tools', label: 'Available Tools', default: 'Gmail, Slack, MongoDB, REST API' }]}
+    />
   );
 }
 
 // ─── Task 5: Prompt Engineering Agent ────────────────────────────────────────
 function PromptEngineerAgent() {
-  const [rawPrompt, setRawPrompt] = useState('');
-  const [useCase, setUseCase] = useState('General');
-  const [result, setResult] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [stepIdx, setStepIdx] = useState(0);
-  const steps = ['🧠 Analyzing prompt intent...', '🔧 Applying prompt engineering patterns...', '✨ Optimizing for LLM reasoning...'];
-
-  const run = async () => {
-    if (!rawPrompt.trim()) return;
-    setLoading(true); setResult(''); setStepIdx(0);
-    const iv = setInterval(() => setStepIdx(i => (i+1) % steps.length), 900);
-    try {
-      const res = await fetch(`${API}/api/agent`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('ap_token')}` },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514', max_tokens: 1000,
-          system: `You are a Prompt Engineering Agent. Given a raw prompt and use case, apply expert prompt engineering:
-**🔍 Diagnosis:** what's weak or missing in the original prompt
-**🎯 Optimized Prompt:** the improved version (in a code block)
-**🧩 Techniques Applied:** which patterns were used (e.g. Chain-of-Thought, Role Prompting, Few-Shot, ReAct)
-**📊 Why It's Better:** specific improvements explained
-**🔁 Variants:** 2 alternative prompt styles for different needs
-Be precise and technical.`,
-          messages: [{ role: 'user', content: `Use Case: ${useCase}\nRaw Prompt: ${rawPrompt}` }]
-        })
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setResult('❌ Error: ' + (data.error || `Server error ${res.status}`));
-      } else {
-        setResult(data.content?.[0]?.text || 'No response.');
-      }
-    } catch (e) { setResult('❌ Error: ' + e.message); }
-    clearInterval(iv); setLoading(false);
-  };
-
   return (
-    <AgentCard icon="✍️" title="Prompt Engineering Agent" desc="Optimizes raw prompts using Chain-of-Thought, ReAct, and few-shot techniques for better LLM outputs" color="#f472b6" badge="Task 5">
-      <div style={{display:'flex',gap:8,marginBottom:12,flexWrap:'wrap'}}>
-        {['General','Code Generation','Data Analysis','Reasoning','Creative','Agentic'].map(u => (
-          <button key={u} onClick={()=>setUseCase(u)} style={{padding:'4px 14px',borderRadius:20,border:`1.5px solid ${useCase===u?'#f472b6':'#222'}`,background:useCase===u?'#f472b618':'transparent',color:useCase===u?'#f472b6':'#555',fontSize:12,cursor:'pointer',fontWeight:useCase===u?700:400,fontFamily:'Syne,sans-serif'}}>
-            {u}
-          </button>
-        ))}
-      </div>
-      <Lbl>Your Raw Prompt</Lbl>
-      <textarea style={{...s.inp, height:90, resize:'vertical', fontFamily:'monospace', fontSize:12, marginBottom:10, display:'block', width:'100%'}} value={rawPrompt} onChange={e=>setRawPrompt(e.target.value)} placeholder="e.g. Summarize this document and give me key points" />
-      <Btn onClick={run} disabled={loading} color="#f472b6" block>✍️ {loading?'Optimizing...':'Optimize Prompt →'}</Btn>
-      {loading && <Loader step={steps[stepIdx]} color="#f472b6" />}
-      {result && <Out text={result} color="#f472b6" />}
-    </AgentCard>
+    <ReusableAgent 
+      type="prompt" id="5" icon="✍️" title="Prompt Engineering Agent" 
+      desc="Optimizes prompts and validates them with live LLM testing" 
+      color="#f472b6" badge="Task 5" placeholder="e.g. Write a product description for a gaming mouse"
+    />
   );
 }
 
 // ─── Task 6: API Integration Agent ───────────────────────────────────────────
 function APIIntegrationAgent() {
-  const [apiDesc, setApiDesc] = useState('');
-  const [lang, setLang] = useState('Python');
-  const [goal, setGoal] = useState('');
-  const [result, setResult] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [stepIdx, setStepIdx] = useState(0);
-  const steps = ['📡 Parsing API structure...', '🔧 Designing integration pattern...', '💻 Generating integration code...', '🛡️ Adding error handling & auth...'];
-
-  const run = async () => {
-    if (!apiDesc.trim() || !goal.trim()) return;
-    setLoading(true); setResult(''); setStepIdx(0);
-    const iv = setInterval(() => setStepIdx(i => (i+1) % steps.length), 900);
-    try {
-      const res = await fetch(`${API}/api/agent`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('ap_token')}` },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514', max_tokens: 1000,
-          system: `You are an API Integration Agent. Given an API description and integration goal, generate a production-ready integration in ${lang}:
-**📋 Integration Plan:** steps and architecture overview
-**💻 Code:**
-\`\`\`${lang.toLowerCase()}
-(full working integration code with auth, headers, error handling, retries)
-\`\`\`
-**🔒 Auth & Security:** how to handle keys/tokens safely
-**⚠️ Error Handling:** edge cases covered
-**🧪 Test Cases:** 2-3 example test calls
-Be production-ready and follow best practices.`,
-          messages: [{ role: 'user', content: `API: ${apiDesc}\nGoal: ${goal}\nLanguage: ${lang}` }]
-        })
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setResult('❌ Error: ' + (data.error || `Server error ${res.status}`));
-      } else {
-        setResult(data.content?.[0]?.text || 'No response.');
-      }
-    } catch (e) { setResult('❌ Error: ' + e.message); }
-    clearInterval(iv); setLoading(false);
-  };
-
   return (
-    <AgentCard icon="📡" title="API Integration Agent" desc="Generates production-ready API integration code with auth, error handling, and test cases" color="#fbbf24" badge="Task 6">
-      <div style={{display:'flex',gap:8,marginBottom:12,flexWrap:'wrap'}}>
-        {['Python','JavaScript','TypeScript','Go','Java'].map(l => (
-          <button key={l} onClick={()=>setLang(l)} style={{padding:'4px 14px',borderRadius:20,border:`1.5px solid ${lang===l?'#fbbf24':'#222'}`,background:lang===l?'#fbbf2418':'transparent',color:lang===l?'#fbbf24':'#555',fontSize:12,cursor:'pointer',fontWeight:lang===l?700:400,fontFamily:'Syne,sans-serif'}}>
-            {l}
-          </button>
-        ))}
-      </div>
-      <Lbl>API Description (name, endpoint, method, params)</Lbl>
-      <textarea style={{...s.inp, height:70, resize:'vertical', fontFamily:'monospace', fontSize:12, marginBottom:10, display:'block', width:'100%'}} value={apiDesc} onChange={e=>setApiDesc(e.target.value)} placeholder="e.g. OpenWeatherMap REST API — GET /weather?q={city}&appid={key} — returns JSON with temp, humidity" />
-      <Lbl>Integration Goal</Lbl>
-      <div style={s.row}>
-        <input style={s.inp} value={goal} onChange={e=>setGoal(e.target.value)} onKeyDown={e=>e.key==='Enter'&&run()} placeholder="e.g. Fetch weather data and store in MongoDB every hour" />
-        <Btn onClick={run} disabled={loading} color="#fbbf24">{loading?'…':'Generate →'}</Btn>
-      </div>
-      {loading && <Loader step={steps[stepIdx]} color="#fbbf24" />}
-      {result && <Out text={result} color="#fbbf24" />}
-    </AgentCard>
+    <ReusableAgent 
+      type="api" id="6" icon="📡" title="API Integration Agent" 
+      desc="Generates and validates REST API integration patterns" 
+      color="#fbbf24" badge="Task 6" placeholder="Describe the API goal..."
+      extraFields={[{ name: 'api', label: 'API Endpoint/Spec', default: 'GET https://api.stripe.com/v1/charges', type: 'textarea' }]}
+    />
   );
 }
 
@@ -439,14 +269,15 @@ export default function Dashboard() {
               <h1 style={{fontSize:42,fontWeight:900,lineHeight:1.2,marginBottom:12}}>
                 Agentic AI <span style={{background:'linear-gradient(135deg,#00d4ff,#a78bfa,#fb923c)',backgroundSize:'200% 200%',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',animation:'gflow 4s ease infinite'}}>Workflow Tasks</span>
               </h1>
-              <p style={{color:'#444',fontSize:15,maxWidth:520,margin:'0 auto 20px',lineHeight:1.7}}>Six intelligent agents that plan, reason, and execute tasks autonomously using large language models</p>
+              <p style={{color:'#444',fontSize:15,maxWidth:520,margin:'0 auto 20px',lineHeight:1.7}}>Seven intelligent agents that plan, reason, and execute tasks autonomously using large language models</p>
               <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:12,flexWrap:'wrap'}}>
-                {[['6','#00d4ff','Active Agents'],['LLM','#a78bfa','Powered'],['Live','#34d399','Execution'],['Groq','#fb923c','Backend']].map(([v,c,l])=>(
+                {[['7','#00d4ff','Active Agents'],['LLM','#a78bfa','Powered'],['Live','#34d399','Execution'],['Groq','#fb923c','Backend']].map(([v,c,l])=>(
                   <span key={l} style={{color:'#333',fontSize:13}}><span style={{color:c,fontWeight:700}}>{v}</span> {l}</span>
                 ))}
               </div>
             </div>
             <div style={{display:'flex',flexDirection:'column',gap:24}}>
+              <AutonomousAgent />
               <WebResearchAgent />
               <SQLAgent />
               <CodeReviewAgent />

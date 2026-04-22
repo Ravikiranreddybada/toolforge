@@ -1,11 +1,11 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-const passport = require('passport');
-const { Strategy: LocalStrategy } = require('passport-local');
-const { Strategy: GoogleStrategy } = require('passport-google-oauth20');
-const User = require('../models/User');
-const https = require('https');
+import jwt from 'jsonwebtoken';
+import passport from 'passport';
+import { Strategy as LocalStrategy } from 'passport-local';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import User from '../models/User.js';
+import https from 'https';
 
 const JWT_SECRET = process.env.JWT_SECRET || process.env.SESSION_SECRET || 'fallback-secret';
 const FRONTEND_URL = process.env.FRONTEND_URL || 'https://toolforge-liard.vercel.app';
@@ -81,7 +81,7 @@ function signToken(user) {
 }
 
 // ──── JWT Auth Middleware ────
-function requireAuth(req, res, next) {
+export function requireAuth(req, res, next) {
   const header = req.headers['authorization'];
   if (!header || !header.startsWith('Bearer ')) {
     return res.status(401).json({ message: 'No token provided' });
@@ -210,4 +210,4 @@ router.post('/api/agent', requireAuth, (req, res) => {
   proxyReq.end();
 });
 
-module.exports = router;
+export default router;

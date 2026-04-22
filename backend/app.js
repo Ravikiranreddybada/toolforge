@@ -1,8 +1,14 @@
-require('dotenv').config({ quiet: true });
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const authRoutes = require('./routes/auth');
+import 'dotenv/config';
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import authRoutes from './routes/auth.js';
+import agentRoutes from './routes/agent.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -35,7 +41,7 @@ app.get('/health', (req, res) => res.status(200).json({ status: 'ok' }));
 
 mongoose.connect(process.env.MONGODB_URI, {
   serverSelectionTimeoutMS: 10000,
-  tls: true,
+  tls: process.env.MONGODB_URI.includes('+srv'),
   tlsAllowInvalidCertificates: false,
 })
   .then(() => {
@@ -47,4 +53,4 @@ mongoose.connect(process.env.MONGODB_URI, {
     process.exit(1);
   });
 
-module.exports = app;
+export default app;

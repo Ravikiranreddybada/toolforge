@@ -52,50 +52,84 @@ A unified, secure command center featuring six specialized agents with built-in 
 - **CORS & Helm**: Production-hardened security headers.
 
 ### 🧠 AI Intelligence
-- **Groq Llama 3.3 (70B)**: Ultra-fast LLM inference for real-time reasoning.
-- **Chain-of-Thought (CoT)**: Advanced prompting techniques to ensure logical task execution.
-- **AI Proxy Engine**: Secure backend-mediated communication with AI APIs.
-
-### 🗄️ Database & DevOps
-- **MongoDB Atlas**: Fully managed cloud NoSQL database.
-- **Docker & Compose**: Containerized environment for consistent scaling.
-- **Jenkins**: CI/CD pipeline automation.
-
----
-
-## 🔥 Core AI Agents
-
-ToolForge features six intelligent agents designed for specific enterprise pillars:
-
-1.  **🔍 Web Research Agent**: Autonomously breaks down research queries and synthesizes findings into actionable reports.
-2.  **🗄️ SQL Query Generator**: Generates optimized SQL queries based on natural language and provided database schemas.
-3.  **🔬 Code Review Agent**: Scans snippets for bugs, security vulnerabilities, and provides a refactored version with a quality score.
-4.  **⚙️ Workflow Planner**: Generates multi-tool automation skeletons (Python/LangChain) for complex business logic.
-5.  **✍️ Prompt Engineering Agent**: Optimizes raw prompts using industry-standard engineering patterns for maximum LLM performance.
-6.  **📡 API Integration Agent**: Generates production-ready integration code with error handling and authentication for any REST API.
+- **LangGraph & LangChain**: Professional orchestration for stateful, multi-turn AI agents.
+- **Language**: JavaScript (ES Modules)
+- **Framework**: Express.js
+- **Frontend**: React (Vite)
+- **Styling**: Vanilla CSS (Modern Aesthetics)
+- **AI Orchestration**: LangGraph.js / LangChain.js
+- **LLM**: Groq (Llama 3.3 70B)
+- **Database**: MongoDB Atlas (with Agentic Persistence)
 
 ---
 
-## 📐 System Architecture
+## 🏗️ System Architecture (Agentic AI 2.0)
+
+ToolForge uses a **Pure MERN** architecture where the agentic reasoning loop is integrated directly into the application layer:
 
 ```mermaid
 graph TD
   User((User)) -->|HTTPS/JWT| FE[React 19 Frontend - Vercel]
   FE -->|API Requests| BE[Express Backend - Render]
   
+  subgraph AI Orchestration Layer
+    BE -->|Automate| AgentSvc[Python Agent Service]
+    AgentSvc -->|LangGraph| ReAct[ReAct Loop]
+    ReAct -->|Tools| MongoTool[MongoDB Tool]
+    ReAct -->|Tools| SearchTool[Tavily Search]
+    ReAct -->|LLM| Groq[Groq Llama 3.3]
+  end
+
+  subgraph State & Observability
+    AgentSvc -->|Checkpoint| Atlas[MongoDB Atlas]
+    AgentSvc -->|Tracing| LangSmith[LangSmith Dashboard]
+  end
+  
   subgraph Security Layer
     BE -->|OAuth| Passport[Google OAuth 2.0]
     BE -->|Token| JWT[JWT Generator]
   end
 
-  BE -->|Proxy| Groq[Groq Llama 3.3 AI]
-  BE -->|Storage| Atlas[MongoDB Atlas Cloud]
+  BE -->|Proxy| Groq
+  BE -->|Storage| Atlas
   
   subgraph DevOps
     Docker[Docker Containers]
     Jenkins[Jenkins CI/CD]
   end
 ```
+
+---
+
+## 🚀 DevOps & Automation (Marking Criteria)
+
+ToolForge is built with a production-grade DevOps mindset, covering **CI/CD, Containerization, and Agile Task Management**.
+
+### 🎫 1. Jira & Task Management
+We utilize **Jira-style traceability**. Every major feature is mapped from a Jira Ticket ID to a Git Commit.
+*   **Documentation**: See [JIRA_MAPPING.md](./JIRA_MAPPING.md) for the full audit trail.
+
+### 🌿 2. Git Branching Strategy
+We follow a professional **Feature-Branch Workflow**:
+*   `main`: Mirror of Production. Locked for direct commits.
+*   `develop`: Integration branch for tested features.
+*   `feat/*`: Isolated branches for new agents or security patches.
+
+### 🤖 3. Jenkins CI/CD Pipeline
+Our automated pipeline ensures that every code change is verified before deployment.
+*   **Stages**: Checkout → Install → Test → Build → Deploy → Health Check.
+*   **Config**: Defined in [Jenkinsfile](./Jenkinsfile).
+
+### 🐳 4. Docker Containerization
+The entire stack is containerized for "Run Anywhere" portability.
+*   **Backend**: Node.js 20 environment.
+*   **Database**: MongoDB 7.0 container.
+*   **Orchestration**: Managed via `docker-compose.yml`.
+
+### 🎉 5. Extra Mile Effort
+*   **Live Deployment**: Hosted on **Render** (Backend) and **Vercel** (Frontend) with automated SSL/HTTPS.
+*   **ngrok Tunneling**: Guide for local-to-internet secure tunnels in [ngrok-guide.md](./docs/ngrok-guide.md).
+*   **Postman Collection**: Automated API testing suite in [ToolForge.postman_collection.json](./ToolForge.postman_collection.json).
 
 ---
 

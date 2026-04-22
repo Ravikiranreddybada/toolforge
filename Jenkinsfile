@@ -11,28 +11,37 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                bat 'npm install'
+                dir('backend') {
+                    sh 'npm install'
+                }
             }
         }
 
         stage('Run Tests') {
             steps {
-                bat 'node --test test.js || exit 0'
+                dir('backend') {
+                    sh 'node --test test.js || exit 0'
+                }
             }
         }
 
         stage('Build & Deploy with Docker') {
             steps {
-                bat 'docker-compose down || exit 0'
-                bat 'docker-compose up -d --build'
+                sh 'docker-compose down || exit 0'
+                sh 'docker-compose up -d --build'
             }
         }
 
         stage('Health Check') {
             steps {
-                // Wait 10 seconds for app to start up
-                bat 'ping 127.0.0.1 -n 11 > nul'
-                bat 'curl -f http://localhost:3000/health || exit 1'
+                // Verification Stage: Crucial for true DevOps automation.
+                // This ensures the application is not just "running" but actually healthy.
+                
+                // Wait 10 seconds for the Docker containers to stabilize
+                sh 'sleep 10'
+                
+                // Test the /health endpoint. Fails the build if the server isn't responding.
+                sh 'curl -f http://localhost:3000/health || exit 1'
             }
         }
     }
@@ -43,7 +52,7 @@ pipeline {
         }
         failure {
             echo 'Pipeline failed! Check the logs above.'
-            bat 'docker-compose logs || exit 0'
+            sh 'docker-compose logs || exit 0'
         }
     }
 }

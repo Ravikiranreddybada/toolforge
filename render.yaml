@@ -10,8 +10,16 @@ services:
         sync: false
       - key: SESSION_SECRET
         sync: false
-      - key: ANTHROPIC_API_KEY
+      - key: GROQ_API_KEY
         sync: false
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: LANGCHAIN_API_KEY
+        sync: false
+      - key: LANGCHAIN_TRACING_V2
+        value: "true"
+      - key: LANGCHAIN_PROJECT
+        value: "toolforge-prod"
       - key: FRONTEND_URL
         sync: false
       - key: GOOGLE_CLIENT_ID

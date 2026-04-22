@@ -13,8 +13,12 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
+    "@langchain/community": "^0.3.32",
+    "@langchain/core": "^0.3.42",
+    "@langchain/groq": "^0.1.3",
+    "@langchain/langgraph": "^0.2.53",
     "bcryptjs": "^3.0.3",
     "connect-mongo": "^6.0.0",
     "cors": "^2.8.6",
@@ -27,6 +31,9 @@
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.14.2",
+    "tavily-search": "^0.0.1",
+    "zod": "^3.24.2"
   }
 }
