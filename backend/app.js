@@ -15,9 +15,9 @@ const PORT = process.env.PORT || 3000;
 
 app.set('trust proxy', 1);
 
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27018/toolforge";
 if (!process.env.MONGODB_URI) {
-  console.error('FATAL: MONGODB_URI not set');
-  process.exit(1);
+  console.warn('⚠️ MONGODB_URI not set, using default local fallback.');
 }
 
 // CORS — allow Vercel frontend
@@ -40,9 +40,9 @@ app.use('/', authRoutes);
 app.use('/api', agentRoutes);
 app.get('/health', (req, res) => res.status(200).json({ status: 'ok' }));
 
-mongoose.connect(process.env.MONGODB_URI, {
+mongoose.connect(MONGODB_URI, {
   serverSelectionTimeoutMS: 10000,
-  tls: process.env.MONGODB_URI.includes('+srv'),
+  tls: MONGODB_URI.includes('+srv'),
   tlsAllowInvalidCertificates: false,
 })
   .then(() => {

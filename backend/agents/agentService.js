@@ -7,7 +7,8 @@ import { MongoClient } from "mongodb";
 import { z } from "zod";
 
 // ──── MongoDB Setup ────
-const client = new MongoClient(process.env.MONGODB_URI);
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27018/toolforge";
+const client = new MongoClient(MONGODB_URI);
 let db;
 
 // Connect MongoDB lazily (on first use), with error resilience
