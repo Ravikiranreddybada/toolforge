@@ -74,7 +74,7 @@ function ReusableAgent({ id, icon, title, desc, color, badge, placeholder, type,
       
       {loading && <Loader color={color} />}
 
-      {result && <Out text={result} color={color} />}
+      {result && <Out text={result} color={color} type={type} />}
     </AgentCard>
   );
 }
@@ -186,15 +186,95 @@ function Loader({color}) {
   );
 }
 
-function Out({text, color}) {
+// ─── Smart section parser for Prompt Engineering Agent ─────────────────────
+function parsePromptSections(text) {
+  const sectionHeaders = [
+    /^1[).:]\s*(analysis of original[:]?)/i,
+    /^2[).:]\s*(optimized prompt[:]?)/i,
+    /^3[).:]\s*(why it'?s better[:]?)/i,
+    /^4[).:]\s*(variations?[:]?)/i,
+    /^(analysis of original)[:\s]/i,
+    /^(optimized prompt)[:\s]/i,
+    /^(why it'?s better)[:\s]/i,
+    /^(variations?)[:\s]/i,
+  ];
+  const lines = text.split('\n');
+  const sections = [];
+  let current = null;
+  for (const line of lines) {
+    let matched = false;
+    for (const re of sectionHeaders) {
+      if (re.test(line.trim())) {
+        if (current) sections.push(current);
+        const isOptimized = /optimized prompt/i.test(line);
+        const isAnalysis = /analysis of original/i.test(line);
+        current = { title: line.replace(/^[0-9][).:]\s*/,'').trim(), content: [], isOptimized, isAnalysis };
+        matched = true;
+        break;
+      }
+    }
+    if (!matched && current) current.content.push(line);
+    else if (!matched && !current) {
+      if (!sections.length) sections.push({ title: null, content: [line], isOptimized: false, isAnalysis: false });
+      else sections[0].content.push(line);
+    }
+  }
+  if (current) sections.push(current);
+  return sections;
+}
+
+function Out({text, color, type}) {
   const [copied, setCopied] = useState(false);
-  const copy = () => { navigator.clipboard.writeText(text); setCopied(true); setTimeout(()=>setCopied(false),2000); };
+  const [copiedSection, setCopiedSection] = useState(null);
+  const copyAll = () => { navigator.clipboard.writeText(text); setCopied(true); setTimeout(()=>setCopied(false),2000); };
+  const copySection = (content, idx) => {
+    navigator.clipboard.writeText(content.join('\n').trim());
+    setCopiedSection(idx); setTimeout(()=>setCopiedSection(null),2000);
+  };
+
+  // For Prompt Engineering Agent — render as separate cards
+  if (type === 'prompt') {
+    const sections = parsePromptSections(text);
+    if (sections.length > 1) {
+      return (
+        <div style={{marginTop:14}}>
+          {sections.map((sec, idx) => {
+            const contentText = sec.content.join('\n').trim();
+            if (!contentText && !sec.title) return null;
+            if (sec.isOptimized) {
+              // Highlighted box with copy button
+              return (
+                <div key={idx} style={{border:`1px solid ${color}55`,background:`${color}0d`,borderRadius:10,padding:16,marginBottom:12}}>
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}}>
+                    <span style={{color,fontSize:11,fontWeight:800,letterSpacing:1,textTransform:'uppercase'}}>✨ {sec.title}</span>
+                    <button onClick={()=>copySection(sec.content,idx)} style={{background:`${color}22`,border:`1px solid ${color}55`,borderRadius:6,padding:'4px 12px',fontSize:11,fontWeight:700,cursor:'pointer',color,fontFamily:'Syne,sans-serif'}}>
+                      {copiedSection===idx?'✓ Copied':'📋 Copy Prompt'}
+                    </button>
+                  </div>
+                  <div style={{fontFamily:'JetBrains Mono, monospace',color:'#ddd',fontSize:13,lineHeight:1.8,whiteSpace:'pre-wrap'}}>{contentText}</div>
+                </div>
+              );
+            }
+            // Analysis and other sections — no copy, dimmer
+            return (
+              <div key={idx} style={{border:'1px solid #1e1e35',background:'#0d0d1a',borderRadius:10,padding:14,marginBottom:12}}>
+                {sec.title && <div style={{color:'#555',fontSize:10,fontWeight:800,letterSpacing:1,textTransform:'uppercase',marginBottom:8}}>📋 {sec.title}</div>}
+                <div style={{fontFamily:'JetBrains Mono, monospace',color:'#777',fontSize:12,lineHeight:1.8,whiteSpace:'pre-wrap'}}>{contentText}</div>
+              </div>
+            );
+          })}
+        </div>
+      );
+    }
+  }
+
+  // Default output for all other agents
   const lines = text.split('\n');
   return (
-    <div style={{border:`1px solid ${color}33`,background:`${color}06`,borderRadius:10,padding:16,marginTop:14,maxHeight:380,overflowY:'auto'}}>
+    <div style={{border:`1px solid ${color}33`,background:`${color}06`,borderRadius:10,padding:16,marginTop:14,maxHeight:420,overflowY:'auto'}}>
       <div style={{display:'flex',justifyContent:'space-between',marginBottom:8}}>
         <span style={{color,fontSize:10,fontWeight:700,letterSpacing:1,textTransform:'uppercase'}}>✅ Agent Output</span>
-        <button onClick={copy} style={{background:'transparent',border:`1px solid ${color}44`,borderRadius:6,padding:'2px 10px',fontSize:11,fontWeight:600,cursor:'pointer',color,fontFamily:'Syne,sans-serif'}}>{copied?'✓ Copied':'📋 Copy'}</button>
+        <button onClick={copyAll} style={{background:'transparent',border:`1px solid ${color}44`,borderRadius:6,padding:'2px 10px',fontSize:11,fontWeight:600,cursor:'pointer',color,fontFamily:'Syne,sans-serif'}}>{copied?'✓ Copied':'📋 Copy'}</button>
       </div>
       <div style={{fontFamily:'JetBrains Mono, monospace'}}>
         {lines.map((line,i) => {
