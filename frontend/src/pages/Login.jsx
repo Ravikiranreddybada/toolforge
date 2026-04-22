@@ -34,23 +34,26 @@ export default function Login() {
   };
 
   return (
-    <div style={{...styles.container, background: colors.bg.primary}}>
-      <ThemeToggle />
+    <div style={{...styles.container, background: colors.bg.primary, position: 'relative'}}>
+      <div style={{position: 'absolute', top: '20px', right: '20px'}}>
+        <ThemeToggle />
+      </div>
       <div style={{...styles.card, background: colors.bg.secondary, borderColor: colors.border.primary}}>
         <div style={styles.logo}>
-          <div style={styles.logoIcon}>AP</div>
+          <div style={styles.logoIcon}>TF</div>
           <span>ToolForge</span>
         </div>
-{...styles.title, color: colors.text.primary}}>Welcome Back</h1>
-        <p style={{...styles.subtitle, color: colors.text.tertiary}Welcome Back</h1>
-        <p style={styles.subtitle}>Sign in to your account</p>
+
+        <h1 style={{...styles.title, color: colors.text.primary}}>Welcome Back</h1>
+        <p style={{...styles.subtitle, color: colors.text.tertiary}}>Sign in to your account</p>
 
         {(error || googleError) && (
           <div style={styles.errorMsg}>{error || googleError}</div>
         )}
 
         <form onSubmit={handleSubmit}>
-          <div style={styl{...styles.label, color: colors.text.tertiary}}>Username</label>
+          <div style={styles.formGroup}>
+            <label style={{...styles.label, color: colors.text.tertiary}}>Username</label>
             <input
               type="text"
               name="username"
@@ -70,8 +73,7 @@ export default function Login() {
               onChange={(e) => setForm({ ...form, password: e.target.value })}
               placeholder="••••••••"
               required
-              style={{...styles.input, background: colors.bg.primary, borderColor: colors.border.primary, color: colors.text.primary}
-              style={styles.input}
+              style={{...styles.input, background: colors.bg.primary, borderColor: colors.border.primary, color: colors.text.primary}}
             />
           </div>
           <button 

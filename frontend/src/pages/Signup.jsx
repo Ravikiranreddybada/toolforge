@@ -45,8 +45,10 @@ export default function Signup() {
   };
 
   return (
-    <div style={{...styles.container, background: colors.bg.primary}}>
-      <ThemeToggle />
+    <div style={{...styles.container, background: colors.bg.primary, position: 'relative'}}>
+      <div style={{position: 'absolute', top: '20px', right: '20px'}}>
+        <ThemeToggle />
+      </div>
       <div style={{...styles.card, background: colors.bg.secondary, borderColor: colors.border.primary}}>
         <div style={styles.logo}>
           <div style={styles.logoIcon}>AP</div>
