@@ -72,22 +72,7 @@ function ReusableAgent({ id, icon, title, desc, color, badge, placeholder, type,
         <Btn onClick={run} disabled={loading} color={color}>{loading?'…':'Run Agent →'}</Btn>
       </div>
       
-      {loading && <Loader step="Agent is thinking and executing tools..." color={color} />}
-      
-      {steps.length > 0 && (
-        <div style={{marginTop:15, background:'#ffffff05', padding:12, borderRadius:8, border:'1px solid #ffffff11'}}>
-          <div style={{fontSize:10, color:'#555', marginBottom:8, textTransform:'uppercase', fontWeight:800}}>Live execution Trace</div>
-          {steps.map((st, i) => (
-            <div key={i} style={{fontSize:11, marginBottom:6, fontFamily:'JetBrains Mono, monospace'}}>
-              {st.type === 'action' ? (
-                <div style={{color: color}}>🛠️ Calling: <span style={{color:'#fff'}}>{st.tool}</span></div>
-              ) : (
-                <div style={{color:'#34d399', paddingLeft:10, borderLeft:`2px solid ${color}33`, margin:'4px 0'}}>👁️ Result: <span style={{color:'#888'}}>{st.content?.substring(0, 100)}...</span></div>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
+      {loading && <Loader color={color} />}
 
       {result && <Out text={result} color={color} />}
     </AgentCard>
@@ -191,12 +176,12 @@ function AgentCard({ icon, title, desc, color, badge, children }) {
   );
 }
 
-function Loader({step, color}) {
+function Loader({color}) {
   return (
     <div style={{display:'flex',alignItems:'center',gap:10,padding:'10px 14px',borderRadius:8,border:`1px solid ${color}33`,background:`${color}08`,marginTop:12}}>
       <style>{`@keyframes bnc{0%,80%,100%{transform:scale(0.5);opacity:0.5}40%{transform:scale(1);opacity:1}}`}</style>
       {[0,1,2].map(i => <span key={i} style={{width:6,height:6,borderRadius:'50%',background:color,display:'inline-block',animation:`bnc 1.2s ease-in-out ${i*0.2}s infinite`}} />)}
-      <span style={{color,fontSize:13}}>{step}</span>
+      <span style={{color,fontSize:13}}>Running agent...</span>
     </div>
   );
 }
