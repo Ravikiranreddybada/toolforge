@@ -8,10 +8,8 @@ import Dashboard from './pages/Dashboard';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
-  const { colors } = useTheme();
-  
   if (loading) {
-    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: colors.bg.primary, color: colors.text.primary }}>Loading...</div>;
+    return <div className="min-h-screen flex justify-center items-center bg-primary text-primary">Loading...</div>;
   }
   
   if (!user) {

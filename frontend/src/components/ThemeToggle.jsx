@@ -1,33 +1,15 @@
 import { useTheme } from '../context/ThemeContext';
 
 export default function ThemeToggle() {
-  const { isDark, toggleTheme, colors } = useTheme();
+const { isDark, toggleTheme } = useTheme();
 
   return (
     <button
       onClick={toggleTheme}
-      style={{
-        ...styles.toggleBtn,
-        background: colors.bg.secondary,
-        border: `1px solid ${colors.border.primary}`,
-        color: colors.text.primary,
-      }}
+      className="p-2 rounded-lg border border-primary flex items-center justify-center bg-secondary text-primary hover:shadow-md active:scale-95 transition-all font-semibold text-xl cursor-pointer hover:-translate-y-0.5"
       title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
     >
       {isDark ? '☀️' : '🌙'}
     </button>
   );
-}
-
-const styles = {
-  toggleBtn: {
-    fontSize: '18px',
-    cursor: 'pointer',
-    padding: '8px 12px',
-    borderRadius: '8px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    transition: 'all 0.3s ease',
-  }
 };

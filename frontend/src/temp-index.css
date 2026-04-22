@@ -97,12 +97,14 @@ p {
 }
 
 /* Utility Classes - Background */
+.bg-primary { background-color: var(--bg-primary); }
 .bg-secondary { background-color: var(--bg-secondary); }
 .bg-tertiary { background-color: var(--bg-tertiary); }
 .bg-card { background-color: var(--bg-card); }
 .bg-nav { background-color: var(--bg-nav); }
 
 /* Utility Classes - Text */
+.text-primary { color: var(--text-primary); }
 .text-secondary { color: var(--text-secondary); }
 .text-tertiary { color: var(--text-tertiary); }
 
@@ -117,6 +119,7 @@ p {
 .bg-accent-secondary { background-color: var(--accent-secondary); }
 
 /* Utility Classes - Padding */
+.p-1 { padding: 0.25rem; }
 .p-2 { padding: 0.5rem; }
 .p-3 { padding: 0.75rem; }
 .p-4 { padding: 1rem; }

@@ -16,6 +16,8 @@ export function ThemeProvider({ children }) {
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       setIsDark(prefersDark);
     }
+    // Apply theme class
+    document.documentElement.className = isDark ? 'dark' : 'light';
     setIsLoaded(true);
   }, []);
 
@@ -23,6 +25,8 @@ export function ThemeProvider({ children }) {
     setIsDark(prev => {
       const newValue = !prev;
       localStorage.setItem('theme', newValue ? 'dark' : 'light');
+      // Apply theme class
+      document.documentElement.className = newValue ? 'dark' : 'light';
       return newValue;
     });
   };
