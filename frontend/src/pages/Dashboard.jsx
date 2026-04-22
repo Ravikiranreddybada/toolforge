@@ -6,6 +6,7 @@ const API = import.meta.env.VITE_API_URL || 'https://toolforge-df1j.onrender.com
 
 // ─── Reusable Agent Component (Agentic 2.0) ──────────────────────────────────
 function ReusableAgent({ id, icon, title, desc, color, badge, placeholder, type, extraFields }) {
+  const [isExpanded, setIsExpanded] = useState(false);
   const [msg, setMsg] = useState('');
   const [result, setResult] = useState('');
   const [steps, setSteps] = useState([]);
@@ -46,35 +47,39 @@ function ReusableAgent({ id, icon, title, desc, color, badge, placeholder, type,
   };
 
   return (
-    <AgentCard icon={icon} title={title} desc={desc} color={color} badge={badge}>
-      {extraFields?.map(f => (
-        <div key={f.name} style={{marginBottom:12}}>
-          <Lbl>{f.label}</Lbl>
-          {f.type === 'textarea' ? (
-            <textarea 
-              style={{...s.inp, height:60, resize:'vertical', fontFamily:'monospace', fontSize:12, width:'100%'}} 
-              value={fields[f.name]} 
-              onChange={e => setFields({...fields, [f.name]: e.target.value})} 
-            />
-          ) : (
-            <input 
-              style={{...s.inp, width:'100%'}} 
-              value={fields[f.name]} 
-              onChange={e => setFields({...fields, [f.name]: e.target.value})} 
-            />
-          )}
-        </div>
-      ))}
-      
-      <Lbl>{extraFields ? 'Request' : 'Input'}</Lbl>
-      <div style={s.row}>
-        <input style={s.inp} value={msg} onChange={e=>setMsg(e.target.value)} onKeyDown={e=>e.key==='Enter'&&run()} placeholder={placeholder} />
-        <Btn onClick={run} disabled={loading} color={color}>{loading?'…':'Run Agent →'}</Btn>
-      </div>
-      
-      {loading && <Loader color={color} />}
+    <AgentCard icon={icon} title={title} desc={desc} color={color} badge={badge} isExpanded={isExpanded} onToggle={() => setIsExpanded(!isExpanded)}>
+      {isExpanded && (
+        <>
+          {extraFields?.map(f => (
+            <div key={f.name} style={{marginBottom:12}}>
+              <Lbl>{f.label}</Lbl>
+              {f.type === 'textarea' ? (
+                <textarea 
+                  style={{...s.inp, height:60, resize:'vertical', fontFamily:'monospace', fontSize:12, width:'100%'}} 
+                  value={fields[f.name]} 
+                  onChange={e => setFields({...fields, [f.name]: e.target.value})} 
+                />
+              ) : (
+                <input 
+                  style={{...s.inp, width:'100%'}} 
+                  value={fields[f.name]} 
+                  onChange={e => setFields({...fields, [f.name]: e.target.value})} 
+                />
+              )}
+            </div>
+          ))}
+          
+          <Lbl>{extraFields ? 'Request' : 'Input'}</Lbl>
+          <div style={s.row}>
+            <input style={s.inp} value={msg} onChange={e=>setMsg(e.target.value)} onKeyDown={e=>e.key==='Enter'&&run()} placeholder={placeholder} />
+            <Btn onClick={run} disabled={loading} color={color}>{loading?'…':'Run Agent →'}</Btn>
+          </div>
+          
+          {loading && <Loader color={color} />}
 
-      {result && <Out text={result} color={color} type={type} />}
+          {result && <Out text={result} color={color} type={type} />}
+        </>
+      )}
     </AgentCard>
   );
 }
@@ -158,11 +163,11 @@ const Btn = ({children, onClick, disabled, color, block}) => (
   </button>
 );
 
-function AgentCard({ icon, title, desc, color, badge, children }) {
+function AgentCard({ icon, title, desc, color, badge, children, isExpanded, onToggle }) {
   return (
-    <div style={{background:'#0d0d1a',border:`1px solid ${color}22`,borderRadius:16,overflow:'hidden'}}>
-      <div style={{padding:'18px 24px',borderBottom:'1px solid #111',display:'flex',alignItems:'center',gap:12}}>
-        <div style={{width:44,height:44,borderRadius:10,background:`${color}18`,border:`1px solid ${color}33`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,flexShrink:0}}>{icon}</div>
+    <div style={{background:'#0d0d1a',border:`1px solid ${color}22`,borderRadius:16,overflow:'hidden',transition:'all 0.3s ease',cursor:'pointer'}}>
+      <div onClick={onToggle} style={{padding:'18px 24px',borderBottom:'1px solid #111',display:'flex',alignItems:'center',gap:12,cursor:'pointer',userSelect:'none',transition:'all 0.3s ease',background:isExpanded?`${color}08`:'transparent'}}>
+        <div style={{width:44,height:44,borderRadius:10,background:`${color}18`,border:`1px solid ${color}33`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,flexShrink:0,transition:'transform 0.3s ease'}}>{icon}</div>
         <div style={{flex:1}}>
           <div style={{display:'flex',alignItems:'center',gap:8}}>
             <h3 style={{fontSize:16,fontWeight:800,color,fontFamily:'Syne,sans-serif',margin:0}}>{title}</h3>
@@ -170,8 +175,9 @@ function AgentCard({ icon, title, desc, color, badge, children }) {
           </div>
           <p style={{color:'#444',fontSize:12,margin:'2px 0 0'}}>{desc}</p>
         </div>
+        <div style={{fontSize:20,transform:isExpanded?'rotate(180deg)':'rotate(0deg)',transition:'transform 0.3s ease',color}}>↓</div>
       </div>
-      <div style={{padding:'20px 24px'}}>{children}</div>
+      {isExpanded && <div style={{padding:'20px 24px',borderTop:`1px solid ${color}22`,maxHeight:'600px',overflowY:'auto'}}>{children}</div>}
     </div>
   );
 }
