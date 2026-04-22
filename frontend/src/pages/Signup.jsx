@@ -54,9 +54,8 @@ export default function Signup() {
           <div style={styles.logoIcon}>AP</div>
           <span>ToolForge</span>
         </div>
-{...styles.title, color: colors.text.primary}}>Create Account</h1>
-        <p style={{...styles.subtitle, color: colors.text.tertiary}Create Account</h1>
-        <p style={styles.subtitle}>Sign up to get started</p>
+        <h1 style={{...styles.title, color: colors.text.primary}}>Create Account</h1>
+        <p style={{...styles.subtitle, color: colors.text.tertiary}}>Sign up to get started</p>
 
         {error && <div style={styles.errorMsg}>{error}</div>}
         {success && <div style={styles.successMsg}>{success}</div>}

@@ -290,7 +290,6 @@ function Out({ text, color, type }) {
           return <div key={i} style={{color: colors.text.tertiary, fontSize:12, lineHeight:1.7}}>{line}</div>;
         })}
       </div>
-    </div>
   );
 }
 
