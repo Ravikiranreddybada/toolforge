@@ -5,7 +5,7 @@ WORKDIR /app
 # Copy backend package files
 COPY backend/package*.json ./
 
-RUN npm install --omit=dev
+RUN npm install --omit=dev --legacy-peer-deps
 
 # Copy backend source (excluding .env - use Render env vars instead)
 COPY backend/ .
