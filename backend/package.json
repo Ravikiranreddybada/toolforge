@@ -33,7 +33,6 @@
     "passport-local": "^1.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.14.2",
-    "tavily-search": "^0.0.1",
     "zod": "^3.24.2"
   }
 }
