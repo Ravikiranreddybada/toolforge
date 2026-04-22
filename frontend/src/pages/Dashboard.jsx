@@ -164,19 +164,20 @@ const Btn = ({children, onClick, disabled, color, block}) => (
 function AgentCard({ icon, title, desc, color, badge, children }) {
   const { colors } = useTheme();
   return (
-    <div style={{background: colors.bg.secondary,border:`1px solid ${color}22`,borderRadius:16,overflow:'hidden'}}>
-      <div style={{padding:'18px 24px',borderBottom:`1px solid ${colors.border.primary}`,display:'flex',alignItems:'center',gap:12}}>
-        <div style={{width:44,height:44,borderRadius:10,background:`${color}18`,border:`1px solid ${color}33`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,flexShrink:0}}>{icon}</div>
+    <div style={{background: colors.bg.secondary, border:`1px solid ${color}22`, borderRadius:16, overflow:'hidden', marginBottom: 20}}>
+      <div style={{padding:'18px 24px', borderBottom:`1px solid ${colors.border.primary}`, display:'flex', alignItems:'center', gap:12}}>
+        <div style={{width:44, height:44, borderRadius:10, background:`${color}18`, border:`1px solid ${color}33`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, flexShrink:0}}>{icon}</div>
         <div style={{flex:1}}>
-          <div style={{display:'flex',alignItems:'center',gap:8}}>
-            <h3 style={{fontSize:16,fontWeight:800,color,fontFamily:'Syne,sans-serif',margin:0}}>{title}</h3>
-            <span style={{fontSize:10,fontWeight:700,padding:'2px 8px',borderRadius:20,border:`1px solid ${color}44`,color,letterSpacing:0.5}}>{badge}</span>
+          <div style={{display:'flex', alignItems:'center', gap:8}}>
+            <h3 style={{fontSize:16, fontWeight:800, color, fontFamily:'Syne,sans-serif', margin:0}}>{title}</h3>
+            <span style={{fontSize:10, fontWeight:700, padding:'2px 8px', borderRadius:20, border:`1px solid ${color}44`, color, letterSpacing:0.5}}>{badge}</span>
           </div>
-          <p style={{color: colors.text.tertiary,fontSize:12,margin:'2px 0 0'}}>{desc}</p>
+          <p style={{color: colors.text.tertiary, fontSize:12, margin:'2px 0 0'}}>{desc}</p>
         </div>
       </div>
+      <div style={{padding:'20px 24px', borderTop:`1px solid ${color}22`, maxHeight:'600px', overflowY:'auto'}}>
+        {children}
       </div>
-      {isExpanded && <div style={{padding:'20px 24px',borderTop:`1px solid ${color}22`,maxHeight:'600px',overflowY:'auto'}}>{children}</div>}
     </div>
   );
 }
@@ -228,7 +229,8 @@ function parsePromptSections(text) {
   return sections;
 }
 
-function{ colors } = useTheme();
+function Out({ text, color, type }) {
+  const { colors } = useTheme();
   const [copied, setCopied] = useState(false);
   const [copiedSection, setCopiedSection] = useState(null);
   const copyAll = () => { navigator.clipboard.writeText(text); setCopied(true); setTimeout(()=>setCopied(false),2000); };
@@ -281,13 +283,11 @@ function{ colors } = useTheme();
         <span style={{color,fontSize:10,fontWeight:700,letterSpacing:1,textTransform:'uppercase'}}>✅ Agent Output</span>
         <button onClick={copyAll} style={{background:'transparent',border:`1px solid ${color}44`,borderRadius:6,padding:'2px 10px',fontSize:11,fontWeight:600,cursor:'pointer',color,fontFamily:'Syne,sans-serif'}}>{copied?'✓ Copied':'📋 Copy'}</button>
       </div>
-      <div style={{fontFamily:'JetBrains Mono, monospace'}}>
         {lines.map((line,i) => {
           const isBold = line.startsWith('**') && line.includes('**');
           if (isBold) return <div key={i} style={{fontWeight:700,color: colors.text.secondary,marginTop:12,fontSize:13}}>{line.replace(/\*\*/g,'')}</div>;
           if (line.trim()==='') return <div key={i} style={{height:8}} />;
-          return <div key={i} style={{color: colors.text.tertiary} style={{height:8}} />;
-          return <div key={i} style={{color:'#999',fontSize:12,lineHeight:1.7}}>{line}</div>;
+          return <div key={i} style={{color: colors.text.tertiary, fontSize:12, lineHeight:1.7}}>{line}</div>;
         })}
       </div>
     </div>
@@ -371,11 +371,13 @@ export default function Dashboard() {
         {tab==='agents' && (
           <div style={{animation:'sup 0.4s ease'}}>
             <div style={{textAlign:'center',marginBottom:48}}>
-              <div style={{display:'inline-block',background:'#00d4ff0d',border:'1p, color: colors.text.primary}}>
+              <div style={{display:'inline-block',background:'#00d4ff0d',border:`1px solid #00d4ff22`, borderRadius:30, padding:'6px 16px', marginBottom:16}}>
+                <span style={{fontSize:12, fontWeight:700, color:'#00d4ff', letterSpacing:1}}>PLATFORM STATUS: ONLINE</span>
+              </div>
+              <h1 style={{fontSize:38,fontWeight:900,marginBottom:12, color: colors.text.primary}}>
                 Agentic AI <span style={{background:'linear-gradient(135deg,#00d4ff,#a78bfa,#fb923c)',backgroundSize:'200% 200%',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',animation:'gflow 4s ease infinite'}}>Workflow Tasks</span>
               </h1>
-              <p style={{color: colors.text.secondary
-              <p style={{color:'#444',fontSize:15,maxWidth:520,margin:'0 auto 20px',lineHeight:1.7}}>Six intelligent agents that plan, reason, and execute tasks autonomously using large language models</p>
+              <p style={{color: colors.text.secondary,fontSize:15,maxWidth:520,margin:'0 auto 20px',lineHeight:1.7}}>Six intelligent agents that plan, reason, and execute tasks autonomously using large language models</p>
               <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:12,flexWrap:'wrap'}}>
                 {[['6','#00d4ff','Active Agents'],['LLM','#a78bfa','Powered'],['Live','#34d399','Execution'],['Groq','#fb923c','Backend']].map(([v,c,l])=>(
                   <span key={l} style={{color:'#333',fontSize:13}}><span style={{color:c,fontWeight:700}}>{v}</span> {l}</span>
@@ -395,17 +397,17 @@ export default function Dashboard() {
 
         {/* PROFILE TAB */}
         {tab==='profile' && (
-          <div style={{animation:'sup 0.4s ease',maxWidth:580,margin:'0 auto'}}>, color: colors.text.primary}}>Your <span style={{color:'#00d4ff'}}>Profile</span></h1>
-            <div style={{background: colors.bg.secondary,border:`1px solid ${colors.border.primary}`rginBottom:32}}>Your <span style={{color:'#00d4ff'}}>Profile</span></h1>
-            <div style={{background:'#0d0d1a',border:'1px solid #1a1a2e',borderRadius:16,padding:40,textAlign:'center'}}>
+          <div style={{animation:'sup 0.4s ease',maxWidth:580,margin:'0 auto'}}>
+            <h1 style={{fontSize:32, fontWeight:900, marginBottom:32, color: colors.text.primary}}>Your <span style={{color:'#00d4ff'}}>Profile</span></h1>
+            <div style={{background: colors.bg.secondary, border:`1px solid ${colors.border.primary}`, borderRadius:16, padding:40, textAlign:'center'}}>
               <div style={{width:88,height:88,borderRadius:'50%',background:'linear-gradient(135deg,#00d4ff,#7b2ff7)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:36,fontWeight:800,margin:'0 auto 16px',overflow:'hidden'}}>
                 {user?.avatar?<img src={user.avatar} alt="" style={{width:'100%',height:'100%',objectFit:'cover'}}/>:user?.name?.charAt(0).toUpperCase()}
-              </div>, color: colors.text.primary}}>{user?.name}</h2>
+              </div>
+              <h2 style={{fontSize:24, fontWeight:800, marginBottom:4, color: colors.text.primary}}>{user?.name}</h2>
               <p style={{color: colors.text.tertiary,marginBottom:28,fontSize:13}}>ToolForge Member</p>
               {[['Full Name',user?.name, colors.text.secondary],['Username','@'+user?.username,'#00d4ff'],['Email',user?.email, colors.text.secondary],['Auth Method',user?.googleId?'Google OAuth 2.0':'Username & Password', colors.text.secondary]].map(([l,v,c])=>(
                 <div key={l} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'13px 0',borderBottom:`1px solid ${colors.border.primary}`,textAlign:'left'}}>
-                  <span style={{color: colors.text.tertiary:'flex',justifyContent:'space-between',alignItems:'center',padding:'13px 0',borderBottom:'1px solid #111',textAlign:'left'}}>
-                  <span style={{color:'#444',fontSize:13}}>{l}</span>
+                  <span style={{color: colors.text.tertiary, fontSize:13}}>{l}</span>
                   <span style={{color:c,fontWeight:700,fontSize:13,fontFamily:'JetBrains Mono,monospace'}}>{v}</span>
                 </div>
               ))}
