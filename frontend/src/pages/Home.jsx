@@ -1,11 +1,14 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
+import ThemeToggle from '../components/ThemeToggle';
 
 export default function Home() {
   const { user } = useAuth();
+  const { colors } = useTheme();
 
   return (
-    <div style={styles.container}>
+    <div style={{...styles.container, background: colors.bg.primary, color: colors.text.primary}}>
       <style>{`
         * { box-sizing: border-box; }
         @media (max-width: 768px) {
@@ -26,8 +29,8 @@ export default function Home() {
       `}</style>
 
       {/* NAVBAR */}
-      <nav style={styles.nav} className="nav-inner">
-        <Link to="/" style={styles.navLogo}>
+      <nav style={{...styles.nav, background: colors.bg.nav, borderBottomColor: colors.border.primary}} className="nav-inner">
+        <Link to="/" style={{...styles.navLogo, color: colors.text.primary}}>
           <div style={styles.logoIcon}>TF</div>
           <span>ToolForge</span>
         </Link>
@@ -36,22 +39,23 @@ export default function Home() {
             <Link to="/dashboard" style={styles.btnNav}>Dashboard →</Link>
           ) : (
             <>
-              <Link to="/login" style={styles.link}>Login</Link>
+              <Link to="/login" style={{...styles.link, color: colors.text.secondary}}>Login</Link>
               <Link to="/signup" style={styles.btnNav}>Get Started</Link>
             </>
           )}
+          <ThemeToggle />
         </div>
       </nav>
 
       {/* HERO SECTION */}
       <section style={styles.hero} className="hero-wrap">
-        <div style={styles.heroLeft} className="hero-left">
-          <h1 style={styles.title} className="hero-title">
+        <div style={s{...styles.title, color: colors.text.primary}} className="hero-title">
             LLM-Based<br />
             <span style={styles.highlight}>Agentic AI</span><br />
             Workflow<br />
             Automation
           </h1>
+          <p style={{...styles.subtitle, color: colors.text.secondary}
           <p style={styles.subtitle}>
             Six specialized AI agents powered by{' '}
             <strong style={{color:'#00d4ff'}}>LangGraph.js</strong> and{' '}
@@ -64,9 +68,9 @@ export default function Home() {
           </div>
         </div>
 
-        <div style={styles.heroRight} className="hero-right">
-          <div style={styles.aboutCard} className="about-card">
-            <h2 style={styles.cardTitle}>About This Platform</h2>
+        <div style={st{...styles.aboutCard, background: colors.bg.secondary, borderColor: colors.border.primary}} className="about-card">
+            <h2 style={{...styles.cardTitle, color: colors.text.primary}}>About This Platform</h2>
+            <p style={{...styles.cardText, color: colors.text.secondary}le}>About This Platform</h2>
             <p style={styles.cardText}>
               ToolForge is a production-grade platform with native agentic AI reasoning.
               Six intelligent agents that actually execute tools, query live MongoDB, and search the web in real-time.
@@ -81,8 +85,8 @@ export default function Home() {
                 <div style={styles.featureItem} key={title}>
                   <div style={styles.featureIcon}>{icon}</div>
                   <div style={styles.featureText}>
-                    <strong style={{color:'#fff', display:'block', marginBottom:2}}>{title}</strong>
-                    <span style={{color:'#666', fontSize:13}}>{desc}</span>
+                    <strong style={{color: colors.text.primary, display:'block', marginBottom:2}}>{title}</strong>
+                    <span style={{color: colors.text.tertiary, fontSize:13}}>{desc}</span>
                   </div>
                 </div>
               ))}
@@ -92,7 +96,7 @@ export default function Home() {
       </section>
 
       {/* TECH BAR */}
-      <div style={styles.techBar} className="tech-bar">
+      <div style={{...styles.techBar, background: colors.bg.secondary, borderTopColor: colors.border.primary}} className="tech-bar">
         {[
           ['🍃', 'MongoDB', 'Atlas Database'],
           ['⚡', 'Express', 'REST API'],
@@ -106,13 +110,13 @@ export default function Home() {
         ].map(([icon, name, label]) => (
           <div style={styles.techItem} key={name}>
             <span style={{fontSize:18, marginBottom:4}}>{icon}</span>
-            <strong style={{color:'#fff', fontSize:13}}>{name}</strong>
-            <span style={{color:'#555', fontSize:11}}>{label}</span>
+            <strong style={{color: colors.text.primary, fontSize:13}}>{name}</strong>
+            <span style={{color: colors.text.tertiary, fontSize:11}}>{label}</span>
           </div>
         ))}
       </div>
 
-      <footer style={styles.footer} className="footer-inner">
+      <footer style={{...styles.footer, borderTopColor: colors.border.primary, color: colors.text.tertiary}} className="footer-inner">
         <p>© 2026 ToolForge — LLM-Based Agentic AI Platform.</p>
       </footer>
     </div>

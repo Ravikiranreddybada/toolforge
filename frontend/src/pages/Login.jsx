@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
+import ThemeToggle from '../components/ThemeToggle';
 
 export default function Login() {
   const [form, setForm] = useState({ username: '', password: '' });
@@ -8,6 +10,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { colors } = useTheme();
   const [searchParams] = useSearchParams();
   const googleError = searchParams.get('error');
 
@@ -31,14 +34,15 @@ export default function Login() {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
+    <div style={{...styles.container, background: colors.bg.primary}}>
+      <ThemeToggle />
+      <div style={{...styles.card, background: colors.bg.secondary, borderColor: colors.border.primary}}>
         <div style={styles.logo}>
           <div style={styles.logoIcon}>AP</div>
           <span>ToolForge</span>
         </div>
-
-        <h1 style={styles.title}>Welcome Back</h1>
+{...styles.title, color: colors.text.primary}}>Welcome Back</h1>
+        <p style={{...styles.subtitle, color: colors.text.tertiary}Welcome Back</h1>
         <p style={styles.subtitle}>Sign in to your account</p>
 
         {(error || googleError) && (
@@ -46,8 +50,7 @@ export default function Login() {
         )}
 
         <form onSubmit={handleSubmit}>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Username</label>
+          <div style={styl{...styles.label, color: colors.text.tertiary}}>Username</label>
             <input
               type="text"
               name="username"
@@ -55,11 +58,11 @@ export default function Login() {
               onChange={(e) => setForm({ ...form, username: e.target.value })}
               placeholder="your_username"
               required
-              style={styles.input}
+              style={{...styles.input, background: colors.bg.primary, borderColor: colors.border.primary, color: colors.text.primary}}
             />
           </div>
           <div style={styles.formGroup}>
-            <label style={styles.label}>Password</label>
+            <label style={{...styles.label, color: colors.text.tertiary}}>Password</label>
             <input
               type="password"
               name="password"
@@ -67,6 +70,7 @@ export default function Login() {
               onChange={(e) => setForm({ ...form, password: e.target.value })}
               placeholder="••••••••"
               required
+              style={{...styles.input, background: colors.bg.primary, borderColor: colors.border.primary, color: colors.text.primary}
               style={styles.input}
             />
           </div>
@@ -86,7 +90,7 @@ export default function Login() {
         <button 
           type="button" 
           onClick={handleGoogleLogin}
-          style={styles.btnGoogle}
+          style={{...styles.btnGoogle, background: colors.bg.primary, borderColor: colors.border.primary, color: colors.text.secondary}}
         >
           <svg viewBox="0 0 48 48" style={styles.googleIcon}>
             <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
@@ -97,11 +101,11 @@ export default function Login() {
           Continue with Google
         </button>
 
-        <div style={styles.bottomLink}>
-          Don't have an account? <Link to="/signup">Create Account</Link>
+        <div style={{...styles.bottomLink, color: colors.text.secondary}}>
+          Don't have an account? <Link to="/signup" style={{color: colors.accent.primary}}>Create Account</Link>
         </div>
-        <div style={styles.backHome}>
-          <Link to="/">← Back to Home</Link>
+        <div style={{...styles.backHome, color: colors.text.secondary}}>
+          <Link to="/" style={{color: colors.accent.primary}}>← Back to Home</Link>
         </div>
       </div>
     </div>

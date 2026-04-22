@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
+import ThemeToggle from '../components/ThemeToggle';
 
 export default function Signup() {
     const [form, setForm] = useState({
@@ -15,6 +17,7 @@ export default function Signup() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { signup } = useAuth();
+  const { colors } = useTheme();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -42,14 +45,15 @@ export default function Signup() {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
+    <div style={{...styles.container, background: colors.bg.primary}}>
+      <ThemeToggle />
+      <div style={{...styles.card, background: colors.bg.secondary, borderColor: colors.border.primary}}>
         <div style={styles.logo}>
           <div style={styles.logoIcon}>AP</div>
           <span>ToolForge</span>
         </div>
-
-        <h1 style={styles.title}>Create Account</h1>
+{...styles.title, color: colors.text.primary}}>Create Account</h1>
+        <p style={{...styles.subtitle, color: colors.text.tertiary}Create Account</h1>
         <p style={styles.subtitle}>Sign up to get started</p>
 
         {error && <div style={styles.errorMsg}>{error}</div>}
@@ -57,7 +61,7 @@ export default function Signup() {
 
         <form onSubmit={handleSubmit}>
           <div style={styles.formGroup}>
-            <label style={styles.label}>Full Name</label>
+            <label style={{...styles.label, color: colors.text.tertiary}}>Full Name</label>
             <input
               type="text"
               name="name"
@@ -65,11 +69,11 @@ export default function Signup() {
               onChange={handleChange}
               placeholder="John Doe"
               required
-              style={styles.input}
+              style={{...styles.input, background: colors.bg.primary, borderColor: colors.border.primary, color: colors.text.primary}}
             />
           </div>
           <div style={styles.formGroup}>
-            <label style={styles.label}>Username</label>
+            <label style={{...styles.label, color: colors.text.tertiary}}>Username</label>
             <input
               type="text"
               name="username"
@@ -77,11 +81,11 @@ export default function Signup() {
               onChange={handleChange}
               placeholder="john_doe123"
               required
-              style={styles.input}
+              style={{...styles.input, background: colors.bg.primary, borderColor: colors.border.primary, color: colors.text.primary}}
             />
           </div>
           <div style={styles.formGroup}>
-            <label style={styles.label}>Email ID</label>
+            <label style={{...styles.label, color: colors.text.tertiary}}>Email ID</label>
             <input
               type="email"
               name="email"
@@ -89,12 +93,12 @@ export default function Signup() {
               onChange={handleChange}
               placeholder="you@example.com"
               required
-              style={styles.input}
+              style={{...styles.input, background: colors.bg.primary, borderColor: colors.border.primary, color: colors.text.primary}}
             />
           </div>
 
           <div style={styles.formGroup}>
-            <label style={styles.label}>Password</label>
+            <label style={{...styles.label, color: colors.text.tertiary}}>Password</label>
             <input
               type="password"
               name="password"
@@ -103,11 +107,11 @@ export default function Signup() {
               placeholder="Min 6 characters"
               required
               minLength={6}
-              style={styles.input}
+              style={{...styles.input, background: colors.bg.primary, borderColor: colors.border.primary, color: colors.text.primary}}
             />
           </div>
           <div style={styles.formGroup}>
-            <label style={styles.label}>Confirm Password</label>
+            <label style={{...styles.label, color: colors.text.tertiary}}>Confirm Password</label>
             <input
               type="password"
               name="confirmPassword"
@@ -115,7 +119,7 @@ export default function Signup() {
               onChange={handleChange}
               placeholder="••••••••"
               required
-              style={styles.input}
+              style={{...styles.input, background: colors.bg.primary, borderColor: colors.border.primary, color: colors.text.primary}}
             />
           </div>
           <button 
@@ -134,7 +138,7 @@ export default function Signup() {
         <button 
           type="button" 
           onClick={handleGoogleSignup}
-          style={styles.btnGoogle}
+          style={{...styles.btnGoogle, background: colors.bg.primary, borderColor: colors.border.primary, color: colors.text.secondary}}
         >
           <svg viewBox="0 0 48 48" style={styles.googleIcon}>
             <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
@@ -145,11 +149,11 @@ export default function Signup() {
           Continue with Google
         </button>
 
-        <div style={styles.bottomLink}>
-          Already have an account? <Link to="/login">Sign In</Link>
+        <div style={{...styles.bottomLink, color: colors.text.secondary}}>
+          Already have an account? <Link to="/login" style={{color: colors.accent.primary}}>Sign In</Link>
         </div>
-        <div style={styles.backHome}>
-          <Link to="/">← Back to Home</Link>
+        <div style={{...styles.backHome, color: colors.text.secondary}}>
+          <Link to="/" style={{color: colors.accent.primary}}>← Back to Home</Link>
         </div>
       </div>
     </div>

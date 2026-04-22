@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
+import ThemeToggle from '../components/ThemeToggle';
 
 const API = import.meta.env.VITE_API_URL || 'https://toolforge-df1j.onrender.com';
 
 // ─── Reusable Agent Component (Agentic 2.0) ──────────────────────────────────
 function ReusableAgent({ id, icon, title, desc, color, badge, placeholder, type, extraFields }) {
+  const { colors } = useTheme();
   const [msg, setMsg] = useState('');
   const [result, setResult] = useState('');
   const [steps, setSteps] = useState([]);
@@ -48,17 +51,16 @@ function ReusableAgent({ id, icon, title, desc, color, badge, placeholder, type,
   return (
     <AgentCard icon={icon} title={title} desc={desc} color={color} badge={badge}>
       {extraFields?.map(f => (
-        <div key={f.name} style={{marginBottom:12}}>
-          <Lbl>{f.label}</Lbl>
+        <div k color={colors.text.secondary}>{f.label}</Lbl>
           {f.type === 'textarea' ? (
             <textarea 
-              style={{...s.inp, height:60, resize:'vertical', fontFamily:'monospace', fontSize:12, width:'100%'}} 
+              style={{...s.inp, background: colors.bg.primary, borderColor: colors.border.primary, color: colors.text.primary, height:60, resize:'vertical', fontFamily:'monospace', fontSize:12, width:'100%'}} 
               value={fields[f.name]} 
               onChange={e => setFields({...fields, [f.name]: e.target.value})} 
             />
           ) : (
             <input 
-              style={{...s.inp, width:'100%'}} 
+              style={{...s.inp, background: colors.bg.primary, borderColor: colors.border.primary, color: colors.text.primary, width:'100%'}} 
               value={fields[f.name]} 
               onChange={e => setFields({...fields, [f.name]: e.target.value})} 
             />
@@ -66,8 +68,9 @@ function ReusableAgent({ id, icon, title, desc, color, badge, placeholder, type,
         </div>
       ))}
       
-      <Lbl>{extraFields ? 'Request' : 'Input'}</Lbl>
+      <Lbl color={colors.text.secondary}>{extraFields ? 'Request' : 'Input'}</Lbl>
       <div style={s.row}>
+        <input style={{...s.inp, background: colors.bg.primary, borderColor: colors.border.primary, color: colors.text.primary}
         <input style={s.inp} value={msg} onChange={e=>setMsg(e.target.value)} onKeyDown={e=>e.key==='Enter'&&run()} placeholder={placeholder} />
         <Btn onClick={run} disabled={loading} color={color}>{loading?'…':'Run Agent →'}</Btn>
       </div>
@@ -150,7 +153,7 @@ function APIIntegrationAgent() {
 }
 
 // ─── Shared UI Helpers ────────────────────────────────────────────────────────
-const Lbl = ({children}) => <div style={{color:'#444',fontSize:11,fontWeight:700,letterSpacing:1,textTransform:'uppercase',marginBottom:6}}>{children}</div>;
+const Lbl = ({children, color}) => <div style={{color: color || '#444',fontSize:11,fontWeight:700,letterSpacing:1,textTransform:'uppercase',marginBottom:6}}>{children}</div>;
 
 const Btn = ({children, onClick, disabled, color, block}) => (
   <button onClick={onClick} disabled={disabled} style={{background:`linear-gradient(135deg, ${color}, ${color}aa)`,color:'#fff',border:'none',padding:'10px 18px',borderRadius:8,fontSize:13,fontWeight:700,cursor:disabled?'not-allowed':'pointer',fontFamily:'Syne,sans-serif',opacity:disabled?0.6:1,flexShrink:0,width:block?'100%':'auto'}}>
@@ -159,16 +162,17 @@ const Btn = ({children, onClick, disabled, color, block}) => (
 );
 
 function AgentCard({ icon, title, desc, color, badge, children }) {
+  const { colors } = useTheme();
   return (
-    <div style={{background:'#0d0d1a',border:`1px solid ${color}22`,borderRadius:16,overflow:'hidden'}}>
-      <div style={{padding:'18px 24px',borderBottom:'1px solid #111',display:'flex',alignItems:'center',gap:12}}>
+    <div style={{background: colors.bg.secondary,border:`1px solid ${color}22`,borderRadius:16,overflow:'hidden'}}>
+      <div style={{padding:'18px 24px',borderBottom:`1px solid ${colors.border.primary}`,display:'flex',alignItems:'center',gap:12}}>
         <div style={{width:44,height:44,borderRadius:10,background:`${color}18`,border:`1px solid ${color}33`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,flexShrink:0}}>{icon}</div>
         <div style={{flex:1}}>
           <div style={{display:'flex',alignItems:'center',gap:8}}>
             <h3 style={{fontSize:16,fontWeight:800,color,fontFamily:'Syne,sans-serif',margin:0}}>{title}</h3>
             <span style={{fontSize:10,fontWeight:700,padding:'2px 8px',borderRadius:20,border:`1px solid ${color}44`,color,letterSpacing:0.5}}>{badge}</span>
           </div>
-          <p style={{color:'#444',fontSize:12,margin:'2px 0 0'}}>{desc}</p>
+          <p style={{color: colors.text.tertiary,fontSize:12,margin:'2px 0 0'}}>{desc}</p>
         </div>
       </div>
       <div style={{padding:'20px 24px'}}>{children}</div>
@@ -223,7 +227,7 @@ function parsePromptSections(text) {
   return sections;
 }
 
-function Out({text, color, type}) {
+function{ colors } = useTheme();
   const [copied, setCopied] = useState(false);
   const [copiedSection, setCopiedSection] = useState(null);
   const copyAll = () => { navigator.clipboard.writeText(text); setCopied(true); setTimeout(()=>setCopied(false),2000); };
@@ -251,15 +255,15 @@ function Out({text, color, type}) {
                       {copiedSection===idx?'✓ Copied':'📋 Copy Prompt'}
                     </button>
                   </div>
-                  <div style={{fontFamily:'JetBrains Mono, monospace',color:'#ddd',fontSize:13,lineHeight:1.8,whiteSpace:'pre-wrap'}}>{contentText}</div>
+                  <div style={{fontFamily:'JetBrains Mono, monospace',color: colors.text.secondary,fontSize:13,lineHeight:1.8,whiteSpace:'pre-wrap'}}>{contentText}</div>
                 </div>
               );
             }
             // Analysis and other sections — no copy, dimmer
             return (
-              <div key={idx} style={{border:'1px solid #1e1e35',background:'#0d0d1a',borderRadius:10,padding:14,marginBottom:12}}>
-                {sec.title && <div style={{color:'#555',fontSize:10,fontWeight:800,letterSpacing:1,textTransform:'uppercase',marginBottom:8}}>📋 {sec.title}</div>}
-                <div style={{fontFamily:'JetBrains Mono, monospace',color:'#777',fontSize:12,lineHeight:1.8,whiteSpace:'pre-wrap'}}>{contentText}</div>
+              <div key={idx} style={{border:`1px solid ${colors.border.primary}`,background: colors.bg.secondary,borderRadius:10,padding:14,marginBottom:12}}>
+                {sec.title && <div style={{color: colors.text.tertiary,fontSize:10,fontWeight:800,letterSpacing:1,textTransform:'uppercase',marginBottom:8}}>📋 {sec.title}</div>}
+                <div style={{fontFamily:'JetBrains Mono, monospace',color: colors.text.secondary,fontSize:12,lineHeight:1.8,whiteSpace:'pre-wrap'}}>{contentText}</div>
               </div>
             );
           })}
@@ -279,8 +283,9 @@ function Out({text, color, type}) {
       <div style={{fontFamily:'JetBrains Mono, monospace'}}>
         {lines.map((line,i) => {
           const isBold = line.startsWith('**') && line.includes('**');
-          if (isBold) return <div key={i} style={{fontWeight:700,color:'#ddd',marginTop:12,fontSize:13}}>{line.replace(/\*\*/g,'')}</div>;
+          if (isBold) return <div key={i} style={{fontWeight:700,color: colors.text.secondary,marginTop:12,fontSize:13}}>{line.replace(/\*\*/g,'')}</div>;
           if (line.trim()==='') return <div key={i} style={{height:8}} />;
+          return <div key={i} style={{color: colors.text.tertiary} style={{height:8}} />;
           return <div key={i} style={{color:'#999',fontSize:12,lineHeight:1.7}}>{line}</div>;
         })}
       </div>
@@ -291,12 +296,13 @@ function Out({text, color, type}) {
 // ─── Main Dashboard ───────────────────────────────────────────────────────────
 export default function Dashboard() {
   const { user, logout } = useAuth();
+  const { colors } = useTheme();
   const [tab, setTab] = useState('agents');
 
   const handleLogout = async () => { await logout(); window.location.href = '/login'; };
 
   return (
-    <div style={{minHeight:'100vh',background:'#080810',color:'#fff',fontFamily:'Syne,sans-serif'}}>
+    <div style={{minHeight:'100vh',background: colors.bg.primary,color: colors.text.primary,fontFamily:'Syne,sans-serif'}}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;700;800;900&display=swap');
         *{box-sizing:border-box}
@@ -317,20 +323,21 @@ export default function Dashboard() {
       `}</style>
 
       {/* NAV */}
-      <nav className="dash-nav" style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'13px 48px',borderBottom:'1px solid #111',background:'#08081088',backdropFilter:'blur(10px)',position:'sticky',top:0,zIndex:100,flexWrap:'wrap',gap:8}}>
-        <Link to="/" style={{display:'flex',alignItems:'center',gap:10,fontSize:18,fontWeight:800,color:'#fff',textDecoration:'none',fontFamily:'Syne,sans-serif'}}>
+      <nav className="dash-nav" style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'13px 48px',borderBottom:`1px solid ${colors.border.primary}`,background: colors.bg.nav,backdropFilter:'blur(10px)',position:'sticky',top:0,zIndex:100,flexWrap:'wrap',gap:8}}>
+        <Link to="/" style={{display:'flex',alignItems:'center',gap:10,fontSize:18,fontWeight:800,color: colors.text.primary,textDecoration:'none',fontFamily:'Syne,sans-serif'}}>
           <div style={{width:32,height:32,borderRadius:8,background:'linear-gradient(135deg,#00d4ff,#7b2ff7)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:14,fontWeight:800}}>TF</div>
           ToolForge
         </Link>
         <div className="dash-nav-tabs" style={{display:'flex',gap:2}}>
           {['agents','profile','team'].map(t=>(
-            <button key={t} onClick={()=>setTab(t)} style={{background:'transparent',border:'none',borderBottom:`2px solid ${tab===t?'#00d4ff':'transparent'}`,padding:'8px 18px',fontSize:13,fontWeight:600,cursor:'pointer',color:tab===t?'#fff':'#444',fontFamily:'Syne,sans-serif',transition:'all 0.2s'}}>
+            <button key={t} onClick={()=>setTab(t)} style={{background:'transparent',border:'none',borderBottom:`2px solid ${tab===t?'#00d4ff':'transparent'}`,padding:'8px 18px',fontSize:13,fontWeight:600,cursor:'pointer',color:tab===t? colors.text.primary: colors.text.tertiary,fontFamily:'Syne,sans-serif',transition:'all 0.2s'}}>
               {t==='agents'?'🤖 AI Agents':t==='profile'?'👤 Profile':'👥 Team'}
             </button>
           ))}
         </div>
         <div className="dash-nav-user" style={{display:'flex',alignItems:'center',gap:12}}>
-          <span style={{color:'#333',fontSize:12,fontFamily:'JetBrains Mono,monospace'}}>@{user?.username}</span>
+          <span style={{color: colors.text.tertiary,fontSize:12,fontFamily:'JetBrains Mono,monospace'}}>@{user?.username}</span>
+          <ThemeToggle />
           <button onClick={handleLogout} style={{background:'transparent',color:'#ff6b6b',border:'1px solid #ff6b6b33',padding:'7px 16px',borderRadius:8,fontSize:12,fontWeight:700,cursor:'pointer',fontFamily:'Syne,sans-serif'}}>Sign Out</button>
         </div>
       </nav>
@@ -341,10 +348,10 @@ export default function Dashboard() {
         {tab==='agents' && (
           <div style={{animation:'sup 0.4s ease'}}>
             <div style={{textAlign:'center',marginBottom:48}}>
-              <div style={{display:'inline-block',background:'#00d4ff0d',border:'1px solid #00d4ff22',color:'#00d4ff',fontSize:11,fontWeight:700,padding:'4px 14px',borderRadius:20,marginBottom:16,letterSpacing:1,textTransform:'uppercase'}}>🚀 LLM-Powered Agents</div>
-              <h1 style={{fontSize:42,fontWeight:900,lineHeight:1.2,marginBottom:12}}>
+              <div style={{display:'inline-block',background:'#00d4ff0d',border:'1p, color: colors.text.primary}}>
                 Agentic AI <span style={{background:'linear-gradient(135deg,#00d4ff,#a78bfa,#fb923c)',backgroundSize:'200% 200%',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',animation:'gflow 4s ease infinite'}}>Workflow Tasks</span>
               </h1>
+              <p style={{color: colors.text.secondary
               <p style={{color:'#444',fontSize:15,maxWidth:520,margin:'0 auto 20px',lineHeight:1.7}}>Six intelligent agents that plan, reason, and execute tasks autonomously using large language models</p>
               <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:12,flexWrap:'wrap'}}>
                 {[['6','#00d4ff','Active Agents'],['LLM','#a78bfa','Powered'],['Live','#34d399','Execution'],['Groq','#fb923c','Backend']].map(([v,c,l])=>(
@@ -365,16 +372,16 @@ export default function Dashboard() {
 
         {/* PROFILE TAB */}
         {tab==='profile' && (
-          <div style={{animation:'sup 0.4s ease',maxWidth:580,margin:'0 auto'}}>
-            <h1 style={{fontSize:38,fontWeight:900,textAlign:'center',marginBottom:32}}>Your <span style={{color:'#00d4ff'}}>Profile</span></h1>
+          <div style={{animation:'sup 0.4s ease',maxWidth:580,margin:'0 auto'}}>, color: colors.text.primary}}>Your <span style={{color:'#00d4ff'}}>Profile</span></h1>
+            <div style={{background: colors.bg.secondary,border:`1px solid ${colors.border.primary}`rginBottom:32}}>Your <span style={{color:'#00d4ff'}}>Profile</span></h1>
             <div style={{background:'#0d0d1a',border:'1px solid #1a1a2e',borderRadius:16,padding:40,textAlign:'center'}}>
               <div style={{width:88,height:88,borderRadius:'50%',background:'linear-gradient(135deg,#00d4ff,#7b2ff7)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:36,fontWeight:800,margin:'0 auto 16px',overflow:'hidden'}}>
                 {user?.avatar?<img src={user.avatar} alt="" style={{width:'100%',height:'100%',objectFit:'cover'}}/>:user?.name?.charAt(0).toUpperCase()}
-              </div>
-              <h2 style={{fontSize:24,fontWeight:800,marginBottom:4}}>{user?.name}</h2>
-              <p style={{color:'#444',marginBottom:28,fontSize:13}}>ToolForge Member</p>
-              {[['Full Name',user?.name,'#ccc'],['Username','@'+user?.username,'#00d4ff'],['Email',user?.email,'#ccc'],['Auth Method',user?.googleId?'Google OAuth 2.0':'Username & Password','#ccc']].map(([l,v,c])=>(
-                <div key={l} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'13px 0',borderBottom:'1px solid #111',textAlign:'left'}}>
+              </div>, color: colors.text.primary}}>{user?.name}</h2>
+              <p style={{color: colors.text.tertiary,marginBottom:28,fontSize:13}}>ToolForge Member</p>
+              {[['Full Name',user?.name, colors.text.secondary],['Username','@'+user?.username,'#00d4ff'],['Email',user?.email, colors.text.secondary],['Auth Method',user?.googleId?'Google OAuth 2.0':'Username & Password', colors.text.secondary]].map(([l,v,c])=>(
+                <div key={l} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'13px 0',borderBottom:`1px solid ${colors.border.primary}`,textAlign:'left'}}>
+                  <span style={{color: colors.text.tertiary:'flex',justifyContent:'space-between',alignItems:'center',padding:'13px 0',borderBottom:'1px solid #111',textAlign:'left'}}>
                   <span style={{color:'#444',fontSize:13}}>{l}</span>
                   <span style={{color:c,fontWeight:700,fontSize:13,fontFamily:'JetBrains Mono,monospace'}}>{v}</span>
                 </div>
@@ -387,8 +394,8 @@ export default function Dashboard() {
         {tab==='team' && (
           <div style={{animation:'sup 0.4s ease'}}>
             <div style={{textAlign:'center',marginBottom:40}}>
-              <h1 style={{fontSize:38,fontWeight:900,marginBottom:8}}>Our <span style={{color:'#00d4ff'}}>Team</span></h1>
-              <p style={{color:'#444',fontSize:15}}>The engineers who built ToolForge</p>
+              <h1 style={{fontSize:38,fontWeight:900,marginBottom:8, color: colors.text.primary}}>Our <span style={{color:'#00d4ff'}}>Team</span></h1>
+              <p style={{color: colors.text.secondary,fontSize:15}}>The engineers who built ToolForge</p>
             </div>
             <div style={{display:'flex',justifyContent:'center',gap:24,flexWrap:'wrap'}}>
               {[
@@ -396,11 +403,11 @@ export default function Dashboard() {
                 {i:'T',n:'V.Tanish',r:'Frontend & UI/UX',c:'#00d4ff',d:'Specializes in frontend optimization and agentic workflow integration, ensuring a seamless user experience across the platform.'},
                 {i:'E',n:'Kandunuri Eekshith Sai',r:'Backend & Database',c:'#fb923c',d:'Focuses on backend systems and API orchestration, building robust pipelines for autonomous agent execution.'},
               ].map(m=>(
-                <div key={m.n} style={{background:'#0d0d1a',border:`1px solid ${m.c}22`,borderRadius:16,padding:'32px 28px',textAlign:'center',maxWidth:320,flex:'1 1 300px'}}>
+                <div key={m.n} style={{background: colors.bg.secondary,border:`1px solid ${m.c}22`,borderRadius:16,padding:'32px 28px',textAlign:'center',maxWidth:320,flex:'1 1 300px'}}>
                   <div style={{width:72,height:72,borderRadius:'50%',background:`${m.c}18`,border:`2px solid ${m.c}44`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:28,fontWeight:800,color:m.c,margin:'0 auto 16px'}}>{m.i}</div>
-                  <h3 style={{fontSize:17,fontWeight:800,marginBottom:8}}>{m.n}</h3>
+                  <h3 style={{fontSize:17,fontWeight:800,marginBottom:8, color: colors.text.primary}}>{m.n}</h3>
                   <span style={{display:'inline-block',border:`1px solid ${m.c}44`,color:m.c,fontSize:11,fontWeight:700,padding:'3px 12px',borderRadius:20,marginBottom:14}}>{m.r}</span>
-                  <p style={{color:'#555',fontSize:13,lineHeight:1.7}}>{m.d}</p>
+                  <p style={{color: colors.text.secondary,fontSize:13,lineHeight:1.7}}>{m.d}</p>
                 </div>
               ))}
             </div>
@@ -408,7 +415,7 @@ export default function Dashboard() {
         )}
       </div>
 
-      <footer style={{borderTop:'1px solid #111',padding:20,textAlign:'center',color:'#222',fontSize:12,fontFamily:'JetBrains Mono,monospace'}}>
+      <footer style={{borderTop:`1px solid ${colors.border.primary}`,padding:20,textAlign:'center',color: colors.text.tertiary,fontSize:12,fontFamily:'JetBrains Mono,monospace'}}>
         © 2026 ToolForge — LLM-Based Agentic AI for Tool-Using Reasoning Workflows
       </footer>
     </div>
@@ -419,3 +426,10 @@ const s = {
   row: {display:'flex',gap:8,flexWrap:'wrap'},
   inp: {flex:1,minWidth:0,background:'#111',border:'1px solid #1e1e35',borderRadius:8,padding:'10px 14px',color:'#fff',fontSize:13,fontFamily:'JetBrains Mono,monospace',outline:'none',width:'100%'},
 };
+
+// Inject theme-aware scrollbar styles
+const createThemeStyle = (colors) => `
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:${colors.bg.secondary}}
+::-webkit-scrollbar-thumb{background:${colors.text.tertiary}33;border-radius:3px}
+`;
