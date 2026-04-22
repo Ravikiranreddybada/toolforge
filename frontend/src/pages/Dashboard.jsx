@@ -8,11 +8,7 @@ const API = import.meta.env.VITE_API_URL || 'https://toolforge-df1j.onrender.com
 
 // ─── Reusable Agent Component (Agentic 2.0) ──────────────────────────────────
 function ReusableAgent({ id, icon, title, desc, color, badge, placeholder, type, extraFields }) {
-<<<<<<< HEAD
   const { colors } = useTheme();
-=======
-  const [isExpanded, setIsExpanded] = useState(false);
->>>>>>> b5874ab3505dc1ae15d06d2e7f9b3e0de5c05f3b
   const [msg, setMsg] = useState('');
   const [result, setResult] = useState('');
   const [steps, setSteps] = useState([]);
@@ -53,10 +49,10 @@ function ReusableAgent({ id, icon, title, desc, color, badge, placeholder, type,
   };
 
   return (
-<<<<<<< HEAD
     <AgentCard icon={icon} title={title} desc={desc} color={color} badge={badge}>
       {extraFields?.map(f => (
-        <div k color={colors.text.secondary}>{f.label}</Lbl>
+        <div key={f.name} style={{marginBottom:12}}>
+          <Lbl color={colors.text.secondary}>{f.label}</Lbl>
           {f.type === 'textarea' ? (
             <textarea 
               style={{...s.inp, background: colors.bg.primary, borderColor: colors.border.primary, color: colors.text.primary, height:60, resize:'vertical', fontFamily:'monospace', fontSize:12, width:'100%'}} 
@@ -75,47 +71,13 @@ function ReusableAgent({ id, icon, title, desc, color, badge, placeholder, type,
       
       <Lbl color={colors.text.secondary}>{extraFields ? 'Request' : 'Input'}</Lbl>
       <div style={s.row}>
-        <input style={{...s.inp, background: colors.bg.primary, borderColor: colors.border.primary, color: colors.text.primary}
-        <input style={s.inp} value={msg} onChange={e=>setMsg(e.target.value)} onKeyDown={e=>e.key==='Enter'&&run()} placeholder={placeholder} />
+        <input style={{...s.inp, background: colors.bg.primary, borderColor: colors.border.primary, color: colors.text.primary}} value={msg} onChange={e=>setMsg(e.target.value)} onKeyDown={e=>e.key==='Enter'&&run()} placeholder={placeholder} />
         <Btn onClick={run} disabled={loading} color={color}>{loading?'…':'Run Agent →'}</Btn>
       </div>
       
       {loading && <Loader color={color} />}
-=======
-    <AgentCard icon={icon} title={title} desc={desc} color={color} badge={badge} isExpanded={isExpanded} onToggle={() => setIsExpanded(!isExpanded)}>
-      {isExpanded && (
-        <>
-          {extraFields?.map(f => (
-            <div key={f.name} style={{marginBottom:12}}>
-              <Lbl>{f.label}</Lbl>
-              {f.type === 'textarea' ? (
-                <textarea 
-                  style={{...s.inp, height:60, resize:'vertical', fontFamily:'monospace', fontSize:12, width:'100%'}} 
-                  value={fields[f.name]} 
-                  onChange={e => setFields({...fields, [f.name]: e.target.value})} 
-                />
-              ) : (
-                <input 
-                  style={{...s.inp, width:'100%'}} 
-                  value={fields[f.name]} 
-                  onChange={e => setFields({...fields, [f.name]: e.target.value})} 
-                />
-              )}
-            </div>
-          ))}
-          
-          <Lbl>{extraFields ? 'Request' : 'Input'}</Lbl>
-          <div style={s.row}>
-            <input style={s.inp} value={msg} onChange={e=>setMsg(e.target.value)} onKeyDown={e=>e.key==='Enter'&&run()} placeholder={placeholder} />
-            <Btn onClick={run} disabled={loading} color={color}>{loading?'…':'Run Agent →'}</Btn>
-          </div>
-          
-          {loading && <Loader color={color} />}
->>>>>>> b5874ab3505dc1ae15d06d2e7f9b3e0de5c05f3b
 
-          {result && <Out text={result} color={color} type={type} />}
-        </>
-      )}
+      {result && <Out text={result} color={color} type={type} />}
     </AgentCard>
   );
 }
