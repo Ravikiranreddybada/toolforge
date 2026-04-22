@@ -23,8 +23,16 @@ export default function Home() {
         .hero-title { animation: fadeInUp 0.6s ease-out 0.1s backwards; }
         .hero-subtitle { animation: fadeInUp 0.6s ease-out 0.2s backwards; }
         .hero-btns { animation: fadeInUp 0.6s ease-out 0.3s backwards; }
-        .about-card { animation: fadeInUp 0.6s ease-out 0.4s backwards; transition: all 0.3s ease; }
-        .about-card:hover { border-color: #00d4ff33 !important; box-shadow: 0 10px 40px rgba(0,212,255,0.08); }
+        .about-card { 
+          animation: fadeInUp 0.6s ease-out 0.4s backwards; 
+          transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+          backdrop-filter: blur(10px);
+        }
+        .about-card:hover { 
+          transform: translateY(-5px) scale(1.02);
+          border-color: #00d4ff66 !important; 
+          box-shadow: 0 20px 40px rgba(0,212,255,0.15); 
+        }
         .tech-item { transition: transform 0.3s ease; }
         .tech-item:hover { transform: translateY(-4px); }
         .btn-nav-link { transition: all 0.3s ease; }
@@ -43,11 +51,23 @@ export default function Home() {
           position: absolute;
           width: 600px;
           height: 600px;
-          background: radial-gradient(circle, rgba(123, 47, 247, 0.1) 0%, transparent 70%);
-          top: 10%;
+          background: radial-gradient(circle, rgba(123, 47, 247, 0.15) 0%, transparent 70%);
+          top: -10%;
           left: -10%;
           z-index: 0;
-          filter: blur(80px);
+          filter: blur(100px);
+          animation: pulse 10s infinite alternate;
+        }
+        .glow-right {
+          position: absolute;
+          width: 600px;
+          height: 600px;
+          background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+          bottom: -10%;
+          right: -10%;
+          z-index: 0;
+          filter: blur(100px);
+          animation: pulse 12s infinite alternate-reverse;
         }
         @media (max-width: 768px) {
           .nav-inner { padding: 16px 20px !important; }
@@ -65,6 +85,7 @@ export default function Home() {
 
       <div className="grid-bg" />
       <div className="glow" />
+      <div className="glow-right" />
 
       {/* NAVBAR */}
       <nav style={{...styles.nav, background: colors.bg.nav, borderBottomColor: colors.border.primary}}>
@@ -258,13 +279,14 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: '60px',
+    gap: '100px',
     width: '100%',
-    maxWidth: '1300px'
+    maxWidth: '1300px',
+    padding: '40px 0'
   },
   heroContent: {
-    flex: '1.2',
-    maxWidth: '700px',
+    flex: '0 1 auto',
+    maxWidth: '650px',
     textAlign: 'left'
   },
   title: {
@@ -342,8 +364,10 @@ const styles = {
     height: '30px'
   },
   heroRight: {
-    flex: '1',
-    maxWidth: '460px'
+    flex: '0 1 auto',
+    maxWidth: '460px',
+    display: 'flex',
+    justifyContent: 'center'
   },
   aboutCard: {
     border: '1px solid',
@@ -395,6 +419,7 @@ const styles = {
     display: 'flex',
     gap: '32px',
     alignItems: 'center',
+    justifyContent: 'center',
     overflowX: 'auto',
     width: '100%',
     maxWidth: '1300px'
