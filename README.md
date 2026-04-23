@@ -60,7 +60,8 @@ ToolForge features **six** specialized agents powered by autonomous execution lo
 3.  **🔬 Code Review Agent**: Analyzes snippets for bugs and security vulnerabilities.
 4.  **⚙️ Workflow Planner**: Generates multi-tool automation skeletons.
 5.  **✍️ Prompt Engineering Agent**: Optimizes prompts and tests them via live inference.
-6.  **📡 API Integration Agent**: Generates production-ready integration code.
+6.  **📡 API Integration Agent**: Generates and **executes real HTTP GET requests** to validate APIs.
+7.  **🔔 Notification Agent**: Sends **real-time Slack notifications** to the team channel.
 
 ---
 
@@ -83,6 +84,10 @@ graph TD
     
     MongoTool <-->|Read/Write| MongoDB[(MongoDB Atlas)]
     SearchTool <-->|Search| Tavily[Tavily Web API]
+    SlackTool[Slack Notification Tool] -->|Post| Slack[Slack Channel]
+    HTTPTool[HTTP Request Tool] -->|GET| PublicAPI[Public APIs]
+    LangGraph <-->|Tool| SlackTool
+    LangGraph <-->|Tool| HTTPTool
     LangGraph <-->|Inference| Groq[Groq Llama 3.3]
 ```
 
