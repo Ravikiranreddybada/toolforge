@@ -8,7 +8,7 @@
 [![React](https://img.shields.io/badge/React-19-00d4ff?style=for-the-badge&logo=react)](https://react.dev/)
 [![Llama3.3](https://img.shields.io/badge/AI-Llama_3.3-7b2ff7?style=for-the-badge&logo=meta)](https://groq.com/)
 
-**Next-generation MERN platform for autonomous AI agents using Chain-of-Thought (CoT) reasoning.**
+**Next-generation MERN platform for autonomous AI agents using LangGraph-powered ReAct (Reasoning & Acting) workflows.**
 
 [Explore Live Demo](https://toolforge-lyart.vercel.app/) · [Report Bug](https://github.com/Ravikiranreddybada/toolforge/issues) · [Request Feature](https://github.com/Ravikiranreddybada/toolforge/issues)
 </div>
@@ -23,7 +23,7 @@
 Enterprise technical tasks (Code reviews, SQL generation, Workflow planning) are often fragmented across multiple siloed tools, leading to context loss and inefficiency.
 
 ### 💡 The Solution
-A unified, secure command center featuring six specialized agents with built-in **Chain-of-Thought (CoT)** reasoning, integrated directly into a high-performance MERN architecture with enterprise-grade authentication.
+A unified, secure command center featuring six specialized agents with built-in **LangGraph-powered ReAct (Reasoning & Acting)** logic, integrated directly into a high-performance MERN architecture with enterprise-grade authentication.
 
 ---
 
@@ -33,7 +33,7 @@ A unified, secure command center featuring six specialized agents with built-in 
 |---|---|---|
 | **Frontend UI** | ✅ Live | [toolforge-lyart.vercel.app](https://toolforge-lyart.vercel.app/) |
 | **API Backend** | ✅ Live | [toolforge-df1j.onrender.com](https://toolforge-df1j.onrender.com/health) |
-| **Demo Video** | 🎬 Watch | [Loom Walkthrough (Coming Soon)](#) |
+
 
 ---
 

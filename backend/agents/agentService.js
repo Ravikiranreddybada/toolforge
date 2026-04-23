@@ -64,12 +64,17 @@ const getCollectionNames = tool(
   }
 );
 
-const tavilySearch = new TavilySearchResults({
-  maxResults: 3,
-  apiKey: process.env.TAVILY_API_KEY,
-});
+const tools = [executeMongoQuery, getCollectionNames];
 
-const tools = [executeMongoQuery, getCollectionNames, tavilySearch];
+if (process.env.TAVILY_API_KEY) {
+  const tavilySearch = new TavilySearchResults({
+    maxResults: 3,
+    apiKey: process.env.TAVILY_API_KEY,
+  });
+  tools.push(tavilySearch);
+} else {
+  console.warn('⚠️ TAVILY_API_KEY missing. Search functionality will be disabled.');
+}
 
 // ──── LLM & Agent ────
 let agent;

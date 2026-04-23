@@ -1,3 +1,7 @@
 node_modules/
 .env
 *.log
+
+# Ignore documentation folder
+docs/
+DEPLOY.md

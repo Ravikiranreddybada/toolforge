@@ -40,6 +40,12 @@ app.use('/', authRoutes);
 app.use('/api', agentRoutes);
 app.get('/health', (req, res) => res.status(200).json({ status: 'ok' }));
 
+// Webhook endpoint for DevOps Demo
+app.post('/api/webhook', (req, res) => {
+  console.log('🔔 Webhook Payload Received:', req.body);
+  res.status(200).json({ success: true, message: 'Webhook received successfully!' });
+});
+
 mongoose.connect(MONGODB_URI, {
   serverSelectionTimeoutMS: 10000,
   tls: MONGODB_URI.includes('+srv'),
