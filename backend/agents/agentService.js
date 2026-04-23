@@ -110,9 +110,9 @@ const sendSlackNotification = tool(
   },
   {
     name: "send_slack_notification",
-    description: "Sends a real Slack message to the team channel with a given message",
+    description: "Sends a Slack notification to the team. Input is the message text.",
     schema: z.object({
-      message: z.string().describe("The message to send to the Slack channel")
+      message: z.string().describe("The text message to post to Slack")
     })
   }
 );
@@ -141,7 +141,7 @@ if (process.env.GROQ_API_KEY) {
     model: "llama-3.3-70b-versatile",
     apiKey: process.env.GROQ_API_KEY,
     temperature: 0,
-    maxTokens: 1024,
+    maxTokens: 2048,
   });
   agent = createReactAgent({ llm, tools, checkpointSaver: checkpointer });
 } else {
@@ -152,9 +152,10 @@ if (process.env.GROQ_API_KEY) {
 export async function runAgent(message, threadId = "default-thread", systemPrompt = null) {
   const config = { configurable: { thread_id: threadId } };
 
+  const baseSystem = "You are a highly capable AI agent. When calling tools, ensure your JSON arguments are complete and valid. Do not cut off your response early.";
   const messages = systemPrompt
-    ? [["system", systemPrompt], ["user", message]]
-    : [["user", message]];
+    ? [["system", `${baseSystem}\n\n${systemPrompt}`], ["user", message]]
+    : [["system", baseSystem], ["user", message]];
 
   // Wrap in a timeout so the UI never hangs indefinitely
   const timeout = new Promise((_, reject) =>
