@@ -64,7 +64,65 @@ const getCollectionNames = tool(
   }
 );
 
-const tools = [executeMongoQuery, getCollectionNames];
+const executeHttpRequest = tool(
+  async ({ url }) => {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        return `❌ Request failed with status: ${response.status}`;
+      }
+      const data = await response.json();
+      // If array, return first 5 only to keep response clean
+      const result = Array.isArray(data) ? data.slice(0, 5) : data;
+      return JSON.stringify(result, null, 2);
+    } catch (error) {
+      return `❌ HTTP Request failed: ${error.message}`;
+    }
+  },
+  {
+    name: "execute_http_request",
+    description: "Makes a real HTTP GET request to a public API URL and returns the actual response data",
+    schema: z.object({
+      url: z.string().describe("The full API URL to make a GET request to")
+    })
+  }
+);
+
+const sendSlackNotification = tool(
+  async ({ message }) => {
+    try {
+      const webhookUrl = process.env.SLACK_WEBHOOK_URL;
+      if (!webhookUrl) return "❌ SLACK_WEBHOOK_URL not configured.";
+      
+      await fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `payload=${encodeURIComponent(JSON.stringify({ 
+          text: message,
+          username: "ToolForge Bot",
+          icon_emoji: ":robot_face:"
+        }))}`
+      });
+      return "✅ Slack notification sent successfully!";
+    } catch (error) {
+      return `❌ Failed to send Slack notification: ${error.message}`;
+    }
+  },
+  {
+    name: "send_slack_notification",
+    description: "Sends a real Slack message to the team channel with a given message",
+    schema: z.object({
+      message: z.string().describe("The message to send to the Slack channel")
+    })
+  }
+);
+
+const tools = [
+  getCollectionNames,
+  executeMongoQuery,
+  executeHttpRequest,
+  sendSlackNotification
+];
 
 if (process.env.TAVILY_API_KEY) {
   const tavilySearch = new TavilySearchResults({
